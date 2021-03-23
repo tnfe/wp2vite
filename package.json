@@ -2,8 +2,12 @@
   "name": "wp2vite",
   "version": "1.0.0",
   "description": "webpack to vite",
-  "main": "index.js",
+  "main": "src/index.js",
+  "bin": {
+    "wp2vite": "src/bin.js"
+  },
   "scripts": {
+    "build": "babel-cli",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +25,16 @@
   "bugs": {
     "url": "https://github.com/dravenww/wp2vite/issues"
   },
-  "homepage": "https://github.com/dravenww/wp2vite#readme"
+  "homepage": "https://github.com/dravenww/wp2vite#readme",
+  "dependencies": {
+    "cac": "^6.7.2",
+    "chalk": "^4.1.0",
+    "commander": "^7.2.0",
+    "load-json-file": "^6.2.0",
+    "write-json-file": "^4.3.0"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0"
+  }
 }

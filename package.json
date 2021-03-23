@@ -1,0 +1,25 @@
+{
+  "name": "wp2vite",
+  "version": "1.0.0",
+  "description": "webpack to vite",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dravenww/wp2vite.git"
+  },
+  "keywords": [
+    "webpack",
+    "vite",
+    "webpack2vite",
+    "wp2vite"
+  ],
+  "author": "dravenww",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dravenww/wp2vite/issues"
+  },
+  "homepage": "https://github.com/dravenww/wp2vite#readme"
+}

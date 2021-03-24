@@ -28,6 +28,8 @@ async function rewriteJson(base, json) {
   njson.devDependencies['vite'] = '^2.1.0';
   njson.devDependencies['less'] = '^4.1.1';
   njson.devDependencies['@vitejs/plugin-react-refresh'] = '^1.3.1';
+  njson.devDependencies['vite-plugin-react-js-support'] = '^1.0.3';
+  njson.devDependencies['@babel/plugin-transform-react-jsx'] = '^7.13.12';
   // 处理scripts
   if (json.scripts) {
     njson.scripts = {};

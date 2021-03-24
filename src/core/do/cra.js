@@ -1,10 +1,11 @@
 const { getConfigPath, getPackageJson } = require('../config.js');
-const { doHtml } = require('./doHtml.js');
+const { doCraHtml } = require('./doHtml.js');
 const { doViteConfig } = require('./doViteConfig.js');
 const { webpackPath } = require('../constant.js');
 
-const {rewriteJson} = require('./doPackageJson.js');
+const { checkReactIs17 } = require('../../util/index.js')
 
+const {rewriteJson} = require('./doPackageJson.js');
 
 async function doWithCra(base, config, type) {
   console.log("正在处理package.json文件")
@@ -19,6 +20,7 @@ async function doWithCra(base, config, type) {
       break;
     }
   }
+  const isReactMoreThan17 = checkReactIs17(json);
 
   await rewriteJson(base, json);
 
@@ -51,10 +53,13 @@ async function doWithCra(base, config, type) {
   console.log(appIndexJs)
 
   console.log("正在处理入口index.html文件")
-  doHtml(base, appIndexJs);
+  doCraHtml(base, appIndexJs);
   console.log("正在处理入口vite的配置文件")
   doViteConfig(base);
   console.log('万事俱备，只欠东风');
+  console.log(`cd ${base}`);
+  console.log(`npm install`);
+  console.log(`npm run start`);
 }
 
 module.exports = doWithCra

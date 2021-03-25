@@ -1,21 +1,29 @@
-import proxy from "./config/proxy"
 import reactRefresh from '@vitejs/plugin-react-refresh';
-import vitePluginReactJsSupport from 'vite-plugin-react-js-support';
+$import
 
 // https://cn.vitejs.dev/config/
 export default ({command, mode}) => {
-  const rollupOptions = {};
-  if (command === 'serve') {
-    rollupOptions.input = [];
-  }
+  let rollupOptions = {};
+  $rollupOptionsDefine
+
+  let optimizeDeps = {};
+  $optimizeDepsDefine
+
+  $alias
+
+  $proxy
+
+  $esbuild
+
   return {
     base: './', // index.html文件所在位置
     root: './', // js导入的资源路径，src
     resolve: {
-      alias: {},
+      alias: alias,
     },
     server: {
-      // proxy: proxy, // 代理
+      // 代理
+      proxy: proxy,
     },
     build: {
       minify: 'terser', // 是否进行压缩,boolean | 'terser' | 'esbuild',默认使用terser
@@ -24,13 +32,12 @@ export default ({command, mode}) => {
       outDir: 'build', // 产出目录
       rollupOptions: rollupOptions,
     },
-    optimizeDeps: {
-      entries: false,
-    },
+    esbuild: esbuild,
+    optimizeDeps: optimizeDeps,
     plugins: [
       // react-refresh插件
       reactRefresh(),
-      vitePluginReactJsSupport(),
+      $plugin
     ],
     css: {
       preprocessorOptions: {

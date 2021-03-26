@@ -1,5 +1,5 @@
-const path = require('path');
-const { getConfigPath, getPackageJson } = require('../config.js');
+const fs = require('fs');
+const { getConfigPath, getPackageJson, checkEject, checkoutTJSConfig, getAliasConfByConfig } = require('../config.js');
 const { doCraHtml } = require('./doHtml.js');
 const { doViteConfig } = require('./doViteConfig.js');
 const { webpackPath } = require('../constant.js');
@@ -12,50 +12,13 @@ function getProxy(base, json) {
   if (json.proxy) {
     proxy = {};
   }
-  const setupProxyPath = path.join(base, '/src/setupProxy.js');
-  console.log('setupProxyPath =>>' + setupProxyPath);
+  // const setupProxyPath = path.join(base, '/src/setupProxy.js');
+  // console.log('setupProxyPath =>>' + setupProxyPath); // /Users/wuhongjie/mywork/new-cra2/src/setupProxy.js
   return proxy;
 }
 
-async function doWithCra(base, config, type) {
-
-  let imports = {};
-  let alias = {};
-  let esbuild = {};
-  let plugins = [];
-  let optimizeDepsDefine = '';
-  let rollupOptionsDefine = '';
-
-  // 插入插件，因为cra的js，不识别;
-  imports.vitePluginReactJsSupport = 'vite-plugin-react-js-support';
-  plugins.push("vitePluginReactJsSupport([], { jsxInject: true, })");
-  optimizeDepsDefine = `if(command === 'serve') {
-    optimizeDeps.entries = false;
-  }`;
-  rollupOptionsDefine = `if (command === 'serve') {
-    rollupOptions.input = [];
-  }`;
-
-  console.log("正在处理package.json文件")
-  // 获取项目package.json文件
-  const json = await getPackageJson(base);
-  // 是否进行了eject
-  let eject = true;
-  // 遍历json的scripts，看是否有react-scripts
-  for (const script in json.scripts) {
-    if (json.scripts[script].includes('react-scripts')) {
-      eject = false;
-      break;
-    }
-  }
-  const isReactMoreThan17 = checkReactIs17(json);
-
-  const proxy = getProxy(base, json);
-
-  await rewriteJson(base, json);
-
-  console.log("正在处理webpack.config.js文件")
-  let configFile = eject ? webpackPath.craWithEject : webpackPath.craNoEject;
+function getWebpackConfigJson(base, hasEject) {
+  let configFile = hasEject ? webpackPath.craWithEject : webpackPath.craNoEject;
   // 获取webpack的配置文件地址
   const configPath = getConfigPath(base, configFile);
   // 设置环境变量
@@ -66,27 +29,102 @@ async function doWithCra(base, config, type) {
     throw new Error("为获取到webpack.config.js，请用参数输入 --config");
   }
   const webpackConfig = require(configPath);
-  let configJson = {};
+  let configJson;
   if (typeof webpackConfig === "function") {
     configJson = webpackConfig('development');
   } else {
     configJson = webpackConfig;
   }
+  return configJson
+}
 
-  const configAlias = configJson.resolve.alias;
-  for (const configAliasKey in configAlias) {
-    alias[configAliasKey] = configAlias[configAliasKey]
+/**
+ *
+ * @param entry
+ * @return {string}
+ */
+function getEntry(base, entry) {
+  const cwd = process.cwd();
+  let res = "";
+  if (Array.isArray(entry) || typeof entry === 'object') {
+    for (const key in entry) {
+      const value = entry[key]
+      if (value.indexOf('node_modules') === -1) {
+        res = value.replace(cwd, '');
+        break;
+      }
+    }
+  } else if (typeof entry === 'string') {
+    res = entry.replace(cwd, '');
+  }
+  const li = res.split('.');
+  res = li.slice(0, li.length - 1).join('.');
+  const exts = ['js', 'ts', 'jsx', 'tsx'];
+  for (const ext of exts) {
+    if (fs.existsSync(base + res + '.' + ext)) {
+      res += '.' + ext;
+      break;
+    }
+  }
+  return res;
+}
+
+async function doWithCra(base, config) {
+
+  let imports = {};
+  let alias = {};
+  let esbuild = {};
+  let plugins = [];
+  let optimizeDepsDefine = '';
+  let rollupOptionsDefine = '';
+  console.log("***************start**********************");
+  console.log("正在获取各种配置文件")
+
+  const json = await getPackageJson(base); // 获取项目package.json文件
+  const hasEject = checkEject(json); // 判断是否已经进行了eject
+  const isReactMoreThan17 = checkReactIs17(json); // 判断是否是17以后版本
+  const proxy = getProxy(base, json);// 获取代理文件
+  const configJson = getWebpackConfigJson(base, hasEject, config);
+
+  const { hasTsConfig, hasJsConfig } = checkoutTJSConfig(base);
+  if (hasTsConfig || hasJsConfig) {
+    const aliasConf = await getAliasConfByConfig(base, hasTsConfig, hasJsConfig)
+    if (aliasConf) {
+      imports['* as path'] = 'path';
+      for (const key in aliasConf) {
+        alias[key] = aliasConf[key];
+      }
+    }
+  }
+  console.log("***************resolve**********************");
+  console.log("正在处理逻辑")
+
+  if(isReactMoreThan17) {
+    // 插入这个插件
+    imports.vitePluginReactJsSupport = 'vite-plugin-react-js-support';
+    plugins.push("vitePluginReactJsSupport([], { jsxInject: true, })");
+    optimizeDepsDefine = `if(command === 'serve') {\n optimizeDeps.entries = false; \n}`;
+    rollupOptionsDefine = `if (command === 'serve') {\n rollupOptions.input = []; \n }`;
+  } else {
+
   }
 
-  const appIndexJs = configJson.entry.replace(process.cwd(), '');
-  console.log(appIndexJs)
+  const configAlias = configJson.resolve.alias;
+  for (const key in configAlias) {
+    alias[key] = `'${configAlias[key]}'`
+  }
 
-  console.log("正在处理入口index.html文件");
+  // 获取入口并写入到index.html
+  const appIndexJs = getEntry(base, configJson.entry);
   doCraHtml(base, appIndexJs);
-  console.log("正在处理入口vite的配置文件");
 
 
+  console.log("***************write**********************");
+  console.log("开始整理并写入文件");
+  // 写json
+  await rewriteJson(base, json);
 
+  // 写vie.config.js
   doViteConfig(base, {
     imports,
     alias,
@@ -96,11 +134,10 @@ async function doWithCra(base, config, type) {
     optimizeDepsDefine,
     rollupOptionsDefine,
   });
-
+  console.log("***************end**********************");
   console.log('万事俱备，只欠东风');
   console.log(`cd ${base}`);
   console.log(`npm install`);
-  console.log(`npm run start`);
 }
 
 module.exports = doWithCra

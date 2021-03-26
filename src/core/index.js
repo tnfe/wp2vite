@@ -5,12 +5,10 @@ const doWithVue = require('./do/vue.js')
 const doOther = require('./do/other.js')
 
 async function start({ config, type, base, debug }) {
-  if (config) {
-    doOther(config);
-  } else {
+  if (type) {
     switch (type) {
       case projectType.cra:
-        await doWithCra(base, webpackPath.cra);
+        await doWithCra(base, config);
         break;
       case projectType.vue:
         doWithVue(base, webpackPath.vue);
@@ -22,6 +20,8 @@ async function start({ config, type, base, debug }) {
         doOther(base, config);
         break;
     }
+  } else {
+    doOther(config);
   }
 }
 

@@ -18,8 +18,8 @@ async function rewriteJson(base, json) {
     njson.scripts = {};
   }
   const scripts = {
-    dev: 'vite',
-    start: 'vite',
+    dev: 'NODE_ENV=development vite',
+    start: 'NODE_ENV=development vite',
     preview: 'vite preview',
     build: 'vite build',
   }
@@ -28,6 +28,7 @@ async function rewriteJson(base, json) {
     viteKey = njson.scripts[viteKey] ? prefix + viteKey : viteKey;
     njson.scripts[viteKey] = value;
   }
+  // delete njson.babel;
   // 把处理后的json写回到package.json
   await writePackageJson(base, njson);
 }

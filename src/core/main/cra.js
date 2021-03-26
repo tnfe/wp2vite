@@ -1,10 +1,10 @@
 const fs = require('fs');
 const { getConfigPath, getPackageJson, checkEject, checkoutTJSConfig, getAliasConfByConfig } = require('../config.js');
-const { doCraHtml } = require('./doHtml.js');
-const { doViteConfig } = require('./doViteConfig.js');
+const { doCraHtml } = require('../do/doHtml.js');
+const { doViteConfig } = require('../do/doViteConfig.js');
 const { webpackPath } = require('../constant.js');
-const { checkReactIs17 } = require('../../util/index.js')
-const {rewriteJson} = require('./doPackageJson.js');
+const { checkReactIs17 } = require('../../util')
+const {rewriteJson} = require('../do/doPackageJson.js');
 
 function getProxy(base, json) {
   let proxy;
@@ -71,12 +71,18 @@ function getEntry(base, entry) {
 
 async function doWithCra(base, config) {
 
-  let imports = {};
-  let alias = {};
-  let esbuild = {};
-  let plugins = [];
-  let optimizeDepsDefine = '';
-  let rollupOptionsDefine = '';
+  const imports = {};
+  const alias = {};
+  const esbuild = {};
+  const plugins = [];
+  const optimizeDeps = {
+    serve: {},
+    build: {},
+  };
+  const rollupOptions = {
+    serve: {},
+    build: {},
+  };
   console.log("***************start**********************");
   console.log("正在获取各种配置文件")
 
@@ -103,8 +109,8 @@ async function doWithCra(base, config) {
     // 插入这个插件
     imports.vitePluginReactJsSupport = 'vite-plugin-react-js-support';
     plugins.push("vitePluginReactJsSupport([], { jsxInject: true, })");
-    optimizeDepsDefine = `if(command === 'serve') {\n optimizeDeps.entries = false; \n}`;
-    rollupOptionsDefine = `if (command === 'serve') {\n rollupOptions.input = []; \n }`;
+    optimizeDeps.serve.entries = false;
+    rollupOptions.serve.output = '[]';
   } else {
 
   }
@@ -131,8 +137,8 @@ async function doWithCra(base, config) {
     proxy,
     plugins,
     esbuild,
-    optimizeDepsDefine,
-    rollupOptionsDefine,
+    optimizeDeps,
+    rollupOptions,
   });
   console.log("***************end**********************");
   console.log('万事俱备，只欠东风');

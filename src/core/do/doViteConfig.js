@@ -80,6 +80,34 @@ function doEsBuild(content, esBuild) {
 }
 
 /**
+ * 处理optimizeDeps配置 || rollupOptions配置
+ * @param content
+ * @param serve
+ * @param build
+ * @param type
+ * @param replace
+ * @return {*}
+ */
+function doReplace(content, { serve, build }, type, replace) {
+  let str = ''
+  if (serve && Object.keys(serve).length > 0) {
+    str += `if(command === 'serve') {\n`;
+    for (const key in serve) {
+      str += `${type}.${key} = ${serve[key]};\n`;
+    }
+    str += '\n}'
+  }
+  if (build && Object.keys(build).length > 0) {
+    str += `if(command === 'build') {\n`;
+    for (const key in build) {
+      str += `${type}.${key} = ${build[key]};\n`;
+    }
+    str += '\n}'
+  }
+  return content.replace(replace, str);
+}
+
+/**
  * 处理vite.config.js
  * @param base 路径
  * @param imports 引用包的路径 map对象，如：vitePluginReactJsSupport: 'vite-plugin-react-js-support'
@@ -87,11 +115,11 @@ function doEsBuild(content, esBuild) {
  * @param proxy vite proxy 代理，字符串，如
  * @param plugins vite imports 所对应的plugin，字符串数组, 如["vitePluginReactJsSupport()"]
  * @param esbuild esbuild config
- * @param optimizeDepsDefine vite optimizeDeps配置 字符串
- * @param rollupOptionsDefine vite rollupOptions 配置 字符串
+ * @param optimizeDeps vite optimizeDeps配置 字符串
+ * @param rollupOptions vite rollupOptions 配置 字符串
  */
 
-function doViteConfig(base, { imports, alias, proxy, plugins, esbuild, optimizeDepsDefine, rollupOptionsDefine }) {
+function doViteConfig(base, { imports, alias, proxy, plugins, esbuild, optimizeDeps, rollupOptions }) {
   const file = path.resolve(__dirname, '../template/vite.config.js');
   let content = fs.readFileSync(file, {
     encoding: 'utf-8',
@@ -102,16 +130,19 @@ function doViteConfig(base, { imports, alias, proxy, plugins, esbuild, optimizeD
   content = doEsBuild(content, esbuild);
 
   // 替换plugin
-  if(plugins) {
+  if(Array.isArray(plugins) && plugins.length > 0) {
     const replacePlugins = plugins.join('\n');
     content = content.replace(replacePlace.$plugin, replacePlugins);
   } else {
     content = content.replace(replacePlace.$plugin, '');
   }
 
-  content = content.replace(replacePlace.$optimizeDepsDefine, optimizeDepsDefine || '');
-
-  content = content.replace(replacePlace.$rollupOptionsDefine, rollupOptionsDefine || '');
+  if (optimizeDeps) {
+    content = doReplace(content, optimizeDeps, 'optimizeDeps', replacePlace.$optimizeDepsDefine);
+  }
+  if (rollupOptions) {
+    content = doReplace(content, rollupOptions, 'rollupOptions', replacePlace.$rollupOptionsDefine);
+  }
 
   const viteFile = path.resolve(base, './vite.config.js');
   fs.writeFileSync(viteFile, content);

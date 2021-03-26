@@ -1,8 +1,8 @@
 
 const { projectType, webpackPath } = require('./constant.js');
-const doWithCra = require('./do/cra.js')
-const doWithVue = require('./do/vue.js')
-const doOther = require('./do/other.js')
+const doWithCra = require('./main/cra.js')
+const doWithVue = require('./main/vue.js')
+const doOther = require('./main/other.js')
 
 async function start({ config, type, base, debug }) {
   if (type) {

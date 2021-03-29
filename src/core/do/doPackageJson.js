@@ -8,10 +8,9 @@ async function rewriteJson(base, json) {
     njson.devDependencies = {};
   }
   njson.devDependencies.vite = '^2.1.0';
-  njson.devDependencies['less'] = '^4.1.1';
-  njson.devDependencies['@vitejs/plugin-react-refresh'] = '^1.3.1';
-  njson.devDependencies['vite-plugin-react-js-support'] = '^1.0.5';
-  njson.devDependencies['@babel/plugin-transform-react-jsx'] = '^7.13.12';
+  njson.devDependencies['@vitejs/plugin-react-refresh'] = 'latest';
+  njson.devDependencies['vite-plugin-react-js-support'] = 'latest';
+  njson.devDependencies['@babel/plugin-transform-react-jsx'] = 'latest';
 
   // 处理scripts，增加vite命令
   if (!njson.scripts) {

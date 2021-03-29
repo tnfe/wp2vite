@@ -105,14 +105,17 @@ async function doWithCra(base, config) {
   console.log("***************resolve**********************");
   console.log("正在处理逻辑")
 
-  if(isReactMoreThan17) {
-    // 插入这个插件
-    imports.vitePluginReactJsSupport = 'vite-plugin-react-js-support';
-    plugins.push("vitePluginReactJsSupport([], { jsxInject: true, })");
-    optimizeDeps.serve.entries = false;
-    rollupOptions.serve.output = '[]';
-  } else {
+  // 获取入口并写入到index.html
+  const appIndexJs = getEntry(base, configJson.entry);
+  doCraHtml(base, appIndexJs);
 
+  // 入口为js结尾的项目
+  const isJsPro = /\.js$/.test(appIndexJs);
+  if (isJsPro) {
+    imports.vitePluginReactJsSupport = 'vite-plugin-react-js-support';
+    plugins.push(`vitePluginReactJsSupport([], { jsxInject: ${isReactMoreThan17 ? true : false}, })`);
+    optimizeDeps.serve.entries = false;
+    rollupOptions.serve.input = '[]';
   }
 
   const configAlias = configJson.resolve.alias;
@@ -120,9 +123,7 @@ async function doWithCra(base, config) {
     alias[key] = `'${configAlias[key]}'`
   }
 
-  // 获取入口并写入到index.html
-  const appIndexJs = getEntry(base, configJson.entry);
-  doCraHtml(base, appIndexJs);
+
 
 
   console.log("***************write**********************");

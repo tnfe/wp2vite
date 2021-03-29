@@ -7,8 +7,8 @@ const cli = cac('wp2vite');
 cli
   .command('[root]')
   .option('-c, --config <config>', `[string] use webpack config file`)
-  .option('-t, --type <type>', `[string] use project type`)
-  .option('-b, --base <base>', `[string] use project path`)
+  .option('-t, --type <type>', `[string] use project type: create-react-app | vue-cli | other`)
+  .option('-b, --base <base>', `[string] use project path: project path,default process.cwd()`)
   .option('-d, --debug [debug]', `[string | boolean] show debug logs`)
   .action(async (root, options) => {
     let base = options.base;

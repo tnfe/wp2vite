@@ -5,6 +5,7 @@ const { doViteConfig } = require('../do/doViteConfig.js');
 const { webpackPath } = require('../constant.js');
 const { checkReactIs17 } = require('../../util')
 const { rewriteJson } = require('../do/doPackageJson.js');
+const { debugInfo } = require('../debug.js')
 
 function getProxy(base, json) {
   let proxy;
@@ -84,8 +85,7 @@ async function doWithCra(base, config) {
     serve: {},
     build: {},
   };
-  console.log("***************start**********************");
-  console.log("正在获取各种配置文件")
+  debugInfo('正在获取各种配置文件')
 
   const json = await getPackageJson(base); // 获取项目package.json文件
   const hasEject = checkEject(json); // 判断是否已经进行了eject
@@ -103,8 +103,7 @@ async function doWithCra(base, config) {
       }
     }
   }
-  console.log("***************resolve**********************");
-  console.log("正在处理逻辑")
+  debugInfo("正在处理逻辑")
 
   // 获取入口并写入到index.html
   const appIndexJs = getEntry(base, configJson.entry);
@@ -135,8 +134,7 @@ async function doWithCra(base, config) {
   }),`);
   deps['@vitejs/plugin-legacy'] = '^1.3.2';
 
-  console.log("***************write**********************");
-  console.log("开始整理并写入文件");
+  debugInfo("开始整理并写入文件");
   // 写json
   await rewriteJson(base, json, deps);
 
@@ -150,10 +148,9 @@ async function doWithCra(base, config) {
     optimizeDeps,
     rollupOptions,
   });
-  console.log("***************end**********************");
-  console.log('万事俱备，只欠东风');
-  console.log(`cd ${base}`);
-  console.log(`npm install`);
+  debugInfo('万事俱备，只欠东风');
+  debugInfo(`cd ${base}`);
+  debugInfo(`npm install`);
 }
 
 module.exports = doWithCra

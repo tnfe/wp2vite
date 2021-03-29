@@ -1,22 +1,21 @@
 const chalk  = require('chalk');
-let debugSwitch = false;
-
-chalk.green('hello wp2vite');
+const log = console.log;
+let debugSwitch = true;
 
 function switchDebug(debug) {
   debugSwitch = debug;
 }
 
 function debugError(msg) {
-  debugSwitch && chalk.red(msg);
+  debugSwitch && log(chalk.red(msg));
 }
 
 function debugInfo(msg) {
-  debugSwitch && chalk.green(msg);
+  debugSwitch && log(chalk.green(msg));
 }
 
 function debugWarning(msg) {
-  debugSwitch && chalk.yellow(msg);
+  debugSwitch && log(chalk.yellow(msg));
 }
 
 module.exports = {

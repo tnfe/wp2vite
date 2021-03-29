@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dravenww/wp2vite.git"
+    "url": "git+https://github.com/tnfe/wp2vite.git"
   },
   "keywords": [
     "webpack",
@@ -23,9 +23,9 @@
   "author": "dravenww",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dravenww/wp2vite/issues"
+    "url": "https://github.com/tnfe/wp2vite/issues"
   },
-  "homepage": "https://github.com/dravenww/wp2vite#readme",
+  "homepage": "https://github.com/tnfe/wp2vite#readme",
   "dependencies": {
     "cac": "^6.7.2",
     "chalk": "^4.1.0",

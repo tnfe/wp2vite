@@ -4,7 +4,7 @@ const { doCraHtml } = require('../do/doHtml.js');
 const { doViteConfig } = require('../do/doViteConfig.js');
 const { webpackPath } = require('../constant.js');
 const { checkReactIs17 } = require('../../util')
-const {rewriteJson} = require('../do/doPackageJson.js');
+const { rewriteJson } = require('../do/doPackageJson.js');
 
 function getProxy(base, json) {
   let proxy;
@@ -35,7 +35,7 @@ function getWebpackConfigJson(base, hasEject) {
   } else {
     configJson = webpackConfig;
   }
-  return configJson
+  return configJson;
 }
 
 /**
@@ -74,6 +74,7 @@ async function doWithCra(base, config) {
   const imports = {};
   const alias = {};
   const esbuild = {};
+  const deps = {};
   const plugins = [];
   const optimizeDeps = {
     serve: {},
@@ -113,7 +114,8 @@ async function doWithCra(base, config) {
   const isJsPro = /\.js$/.test(appIndexJs);
   if (isJsPro) {
     imports.vitePluginReactJsSupport = 'vite-plugin-react-js-support';
-    plugins.push(`vitePluginReactJsSupport([], { jsxInject: ${isReactMoreThan17 ? true : false}, })`);
+    plugins.push(`vitePluginReactJsSupport([], { jsxInject: ${isReactMoreThan17 ? true : false}, }),`);
+    deps['vite-plugin-react-js-support'] = 'latest';
     optimizeDeps.serve.entries = false;
     rollupOptions.serve.input = '[]';
   }
@@ -123,13 +125,20 @@ async function doWithCra(base, config) {
     alias[key] = `'${configAlias[key]}'`
   }
 
+  imports.reactRefresh = '@vitejs/plugin-react-refresh';
+  plugins.push(`reactRefresh(),`)
+  deps['@vitejs/plugin-react-refresh'] = '^1.3.1';
 
-
+  imports.legacyPlugin = '@vitejs/plugin-legacy';
+  plugins.push(`legacyPlugin({
+    targets: ['Android > 39', 'Chrome >= 60', 'Safari >= 10.1', 'iOS >= 10.3', 'Firefox >= 54',  'Edge >= 15'],
+  }),`);
+  deps['@vitejs/plugin-legacy'] = '^1.3.2';
 
   console.log("***************write**********************");
   console.log("开始整理并写入文件");
   // 写json
-  await rewriteJson(base, json);
+  await rewriteJson(base, json, deps);
 
   // 写vie.config.js
   doViteConfig(base, {

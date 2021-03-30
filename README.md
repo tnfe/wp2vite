@@ -1,6 +1,6 @@
+
+![](https://github.com/dravenww/wp2vite/blob/master/logo.png?raw=true)
 # wp2vite
-
-
 
 一款转化工具，可以一键让webpack项目支持vite
 

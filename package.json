@@ -1,6 +1,6 @@
 {
   "name": "wp2vite",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "webpack support vite",
   "main": "src/start.js",
   "bin": {
@@ -30,9 +30,7 @@
     "cac": "^6.7.2",
     "chalk": "^4.1.0",
     "commander": "^7.2.0",
-    "customize-cra": "^1.0.0",
     "load-json-file": "^6.2.0",
-    "mock": "^0.1.1",
     "write-json-file": "^4.3.0"
   },
   "devDependencies": {

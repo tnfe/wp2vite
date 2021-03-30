@@ -16,9 +16,18 @@ function getEntry(base, entry) {
   if (Array.isArray(entry) || typeof entry === 'object') {
     for (const key in entry) {
       const value = entry[key]
-      if (value.indexOf('node_modules') === -1) {
-        res = value.replace(cwd, '');
-        break;
+      if (Array.isArray(value)) {
+        for (const val of value) {
+          if (val.indexOf('node_modules') === -1) {
+            res = val.replace(cwd, '');
+            break;
+          }
+        }
+      } else {
+        if (value.indexOf('node_modules') === -1) {
+          res = value.replace(cwd, '');
+          break;
+        }
       }
     }
   } else if (typeof entry === 'string') {
@@ -103,7 +112,7 @@ async function doReact(base, config, json, check) {
   // 写json
   await rewriteJson(base, json, deps);
 
-  // 写vie.config.js
+  // 写vite.config.js
   doViteConfig(base, {
     imports,
     alias,

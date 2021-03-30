@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { replacePlace } = require('../constant.js')
+const { replacePlace } = require('../const.js')
 
 /**
  * 替换imports
@@ -50,7 +50,7 @@ function doProxy(content, proxy) {
   if(proxy) {
     proxyStr += 'let proxy = {\n';
     for (const key in proxy) {
-      proxyStr += `'${key}': ${proxy[key]},\n`;
+      proxyStr += `'${key}': ${JSON.stringify(proxy[key])},\n`;
     }
     proxyStr += '\n}';
   } else {

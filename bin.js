@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 function start() {
-  require('./core/cli.js');
+  require('./src/main/cli.js');
 }
 
 start();
-

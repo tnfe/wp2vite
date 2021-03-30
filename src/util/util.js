@@ -47,26 +47,8 @@ function getVersion(dep) {
   return dep;
 }
 
-/**
- *
- * @param json
- * @return {boolean} 是否大于17
- */
-function checkReactIs17(json){
-  const deps = json.dependencies;
-  const devDeps = json.devDependencies;
-  // 判断react版本是否大于等于17
-  const reactV = getVersion(deps.react || devDeps.react);
-  const react17 = compareVersion(reactV, '17.0.0');
-  // 判断react-scripts版本是否大于等于4
-  const scriptV = getVersion(deps['react-scripts'] || devDeps['react-scripts']);
-  const script4 = compareVersion(scriptV, '4.0.0');
-  return react17 || script4;
-}
 
 module.exports = {
   compareVersion,
   getVersion,
-  isNumber,
-  checkReactIs17
 }

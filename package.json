@@ -4,10 +4,10 @@
   "description": "webpack to vite",
   "main": "src/index.js",
   "bin": {
-    "wp2vite": "src/bin.js"
+    "wp2vite": "bin.js"
   },
   "scripts": {
-    "build": "babel-cli",
+    "build": "echo \" npm run build\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,7 +30,9 @@
     "cac": "^6.7.2",
     "chalk": "^4.1.0",
     "commander": "^7.2.0",
+    "customize-cra": "^1.0.0",
     "load-json-file": "^6.2.0",
+    "mock": "^0.1.1",
     "write-json-file": "^4.3.0"
   },
   "devDependencies": {

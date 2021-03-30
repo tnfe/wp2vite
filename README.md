@@ -10,7 +10,7 @@ npm install -g wp2vite
 # 使用
 ```
 cd yourwork/your_project
-wp2vite --type=create-react-app
+wp2vite init
 
 npm install
 

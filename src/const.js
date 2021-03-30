@@ -1,5 +1,6 @@
 const projectType = {
   cra: 'create-react-app',
+  rar: 'react-app-rewired',
   vue: 'vue-cli',
   other: 'other',
 }
@@ -7,6 +8,7 @@ const projectType = {
 const webpackPath = {
   craNoEject: './node_modules/react-scripts/config/webpack.config.js',
   craWithEject: './config/webpack.config.js',
+  rar: './config-overrides.js',
   vue: './config/index.js',
 }
 

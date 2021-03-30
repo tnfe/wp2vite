@@ -1,4 +1,4 @@
-const { writePackageJson } = require('../config.js');
+const { writePackageJson } = require('../util/fileHelp.js');
 
 const prefix = 'vite-'
 const scripts = {

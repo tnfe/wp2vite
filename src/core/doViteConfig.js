@@ -5,6 +5,8 @@ const { debugInfo } = require('../util/debug.js');
 
 const debugKey = 'config';
 
+const { viteConfig } = require('../template/vite.config.js')
+
 /**
  * 替换imports
  * @param content
@@ -126,10 +128,7 @@ function doReplace(content, { serve, build }, type, replace) {
  */
 
 function doViteConfig(base, { imports, alias, proxy, plugins, esbuild, optimizeDeps, rollupOptions }) {
-  const file = path.resolve(__dirname, '../template/vite.config.js');
-  let content = fs.readFileSync(file, {
-    encoding: 'utf-8',
-  });
+  let content = viteConfig;
   content = doImport(content, imports);
   content = doAlias(content, alias);
   content = doProxy(content, proxy);

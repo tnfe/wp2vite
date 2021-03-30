@@ -114,7 +114,7 @@ async function doReact(base, config, json, check) {
     rollupOptions,
   });
   debugInfo('万事俱备，只欠东风');
-  debugInfo(`npm install && npm run vite-dev`);
+  debugInfo(`npm install && npm run vite-start`);
 }
 
 module.exports = doReact

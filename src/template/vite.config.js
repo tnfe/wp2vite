@@ -1,6 +1,6 @@
+const viteConfig = `
 /* eslint-disable */
 $import
-
 // https://cn.vitejs.dev/config/
 export default ({command, mode}) => {
   let rollupOptions = {};
@@ -22,7 +22,7 @@ export default ({command, mode}) => {
       alias,
     },
     define: {
-      'process.env.REACT_APP_IS_LOCAL': "'true'", // for example: can use in project with `process.env.REACT_APP_IS_LOCAL === 'true'`
+      'process.env.REACT_APP_IS_LOCAL': "'true'",
     },
     server: {
       // 代理
@@ -50,4 +50,8 @@ export default ({command, mode}) => {
       }
     },
   }
+}`
+
+module.exports = {
+  viteConfig
 }

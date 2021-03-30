@@ -2,7 +2,7 @@
   "name": "wp2vite",
   "version": "1.0.3",
   "description": "webpack support vite",
-  "main": "src/start.js",
+  "main": "dist/index.js",
   "bin": {
     "wp2vite": "bin.js"
   },
@@ -19,6 +19,11 @@
     "vite",
     "webpack2vite",
     "wp2vite"
+  ],
+  "files": [
+    "dist/*",
+    "README.md",
+    "bin.js"
   ],
   "author": "dravenww",
   "license": "ISC",

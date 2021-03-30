@@ -1,8 +1,8 @@
 {
   "name": "wp2vite",
-  "version": "1.0.0",
-  "description": "webpack to vite",
-  "main": "src/index.js",
+  "version": "1.0.1",
+  "description": "webpack support vite",
+  "main": "src/start.js",
   "bin": {
     "wp2vite": "bin.js"
   },

@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-const { replacePlace } = require('../const.js')
+const { replacePlace } = require('../const.js');
+const { debugInfo } = require('../util/debug.js');
+
+const debugKey = 'config';
 
 /**
  * 替换imports
@@ -9,6 +12,7 @@ const { replacePlace } = require('../const.js')
  * @return content
  */
 function doImport(content, imports) {
+  debugInfo(debugKey, "将import写入到vite的配置文件");
   let importStr = '';
   if (imports) {
     for (const importsKey in imports) {
@@ -25,9 +29,9 @@ function doImport(content, imports) {
  * @return content
  */
 function doAlias(content, alias) {
-
+  debugInfo(debugKey, "将alias写入到vite的配置文件");
   let aliasStr = '';
-  if(alias) {
+  if (alias) {
     aliasStr += 'let alias = {\n';
     for (const aliasKey in alias) {
       aliasStr += `'${aliasKey}': ${alias[aliasKey]},\n`;
@@ -46,8 +50,9 @@ function doAlias(content, alias) {
  * @return content
  */
 function doProxy(content, proxy) {
+  debugInfo(debugKey, "将proxy写入到vite的配置文件");
   let proxyStr = '';
-  if(proxy) {
+  if (proxy) {
     proxyStr += 'let proxy = {\n';
     for (const key in proxy) {
       proxyStr += `'${key}': ${JSON.stringify(proxy[key])},\n`;
@@ -66,6 +71,7 @@ function doProxy(content, proxy) {
  * @return content
  */
 function doEsBuild(content, esBuild) {
+  debugInfo(debugKey, "将esbuild写入到vite的配置文件");
   let str = '';
   if (esBuild) {
     str += 'let esbuild = {\n';
@@ -130,7 +136,8 @@ function doViteConfig(base, { imports, alias, proxy, plugins, esbuild, optimizeD
   content = doEsBuild(content, esbuild);
 
   // 替换plugin
-  if(Array.isArray(plugins) && plugins.length > 0) {
+  if (Array.isArray(plugins) && plugins.length > 0) {
+    debugInfo(debugKey, "将plugin写入到vite的配置文件");
     const replacePlugins = plugins.join('\n');
     content = content.replace(replacePlace.$plugin, replacePlugins);
   } else {
@@ -138,13 +145,16 @@ function doViteConfig(base, { imports, alias, proxy, plugins, esbuild, optimizeD
   }
 
   if (optimizeDeps) {
+    debugInfo(debugKey, "将optimizeDeps写入到vite的配置文件");
     content = doReplace(content, optimizeDeps, 'optimizeDeps', replacePlace.$optimizeDepsDefine);
   }
   if (rollupOptions) {
+    debugInfo(debugKey, "将rollupOptions写入到vite的配置文件");
     content = doReplace(content, rollupOptions, 'rollupOptions', replacePlace.$rollupOptionsDefine);
   }
 
   const viteFile = path.resolve(base, './vite.config.js');
+  debugInfo(debugKey, "汇总并写入到vite.config.js");
   fs.writeFileSync(viteFile, content);
 }
 

@@ -10,6 +10,7 @@ const { debugInfo } = require('../util/debug.js')
  * @return {string}
  */
 function getEntry(base, entry) {
+  debugInfo('entry', `根据webpack的配置获取入口`);
   const cwd = process.cwd();
   let res = "";
   if (Array.isArray(entry) || typeof entry === 'object') {
@@ -32,11 +33,13 @@ function getEntry(base, entry) {
       break;
     }
   }
+  debugInfo('entry', `入口获取完成，入口为: ${res}`);
   return res;
 }
 
 async function doReact(base, config, json, check) {
 
+  debugInfo('start', 'wp2vite认为是react项目');
   const imports = {};
   const alias = {};
   const esbuild = {};
@@ -50,7 +53,7 @@ async function doReact(base, config, json, check) {
     serve: {},
     build: {},
   };
-  debugInfo('正在获取各种配置文件');
+  debugInfo('start', '正在获取各种配置文件');
 
   const { reactEject, isReactAppRewired, isReactMoreThan17 } = check;
   const proxy = await getProxyByMock(base);// 获取代理文件
@@ -65,7 +68,6 @@ async function doReact(base, config, json, check) {
       }
     }
   }
-  debugInfo("正在处理逻辑")
   // 获取入口并写入到index.html
   const appIndexJs = getEntry(base, configJson.entry);
   doCraHtml(base, appIndexJs);
@@ -73,6 +75,7 @@ async function doReact(base, config, json, check) {
   // 入口为js结尾的项目
   const isJsPro = /\.js$/.test(appIndexJs);
   if (isJsPro) {
+    debugInfo("plugin", "js项目插入plugin：vite-plugin-react-js-support");
     imports.vitePluginReactJsSupport = 'vite-plugin-react-js-support';
     plugins.push(`vitePluginReactJsSupport([], { jsxInject: ${isReactMoreThan17 ? true : false}, }),`);
     deps['vite-plugin-react-js-support'] = 'latest';
@@ -85,17 +88,18 @@ async function doReact(base, config, json, check) {
     alias[key] = configAlias[key]
   }
 
+  debugInfo("plugin", "react项目插入plugin：@vitejs/plugin-react-refresh");
   imports.reactRefresh = '@vitejs/plugin-react-refresh';
   plugins.push(`reactRefresh(),`)
   deps['@vitejs/plugin-react-refresh'] = '^1.3.1';
 
+  debugInfo("plugin", "为项目插入兼容plugin：@vitejs/plugin-legacy");
   imports.legacyPlugin = '@vitejs/plugin-legacy';
   plugins.push(`legacyPlugin({
     targets: ['Android > 39', 'Chrome >= 60', 'Safari >= 10.1', 'iOS >= 10.3', 'Firefox >= 54',  'Edge >= 15'],
   }),`);
   deps['@vitejs/plugin-legacy'] = '^1.3.2';
 
-  debugInfo("开始整理并写入文件");
   // 写json
   await rewriteJson(base, json, deps);
 

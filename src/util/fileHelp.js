@@ -23,6 +23,7 @@ async function getPackageJson(base) {
  * @return {{}|null}
  */
 function getAliasByJsonAlias(base, json) {
+  debugInfo("alias", "根据webpack配置文件处理alias");
   if (!json)
     return null;
   const res = {};
@@ -35,6 +36,7 @@ function getAliasByJsonAlias(base, json) {
       res[key] = `'${value}'`;
     }
   }
+  debugInfo("alias", "处理alias完成");
   return res;
 }
 
@@ -59,22 +61,21 @@ async function getProxyByMock(base) {
     const json = await loadJsonFile(middleJson);
     const middlePath = path.join(base + '/node_modules/http-proxy-middleware/', json.main);
     const res = {};
+    function mockCreateProxyMiddleware(context, options) {
+      res[context] = options
+    }
     if (compareVersion(json.version, '1.0.0')) {
       debugInfo('proxy', `http-proxy-middleware版本大于1，开始mock`);
       const hpm = require(middlePath);
+      hpm.createProxyMiddleware = mockCreateProxyMiddleware;
       const setup = require(setupProxyPath);
-      hpm.createProxyMiddleware = function mockCreateProxyMiddleware(context, options) {
-        res[context] = options
-      }
       setup({ use: () => {}});
       delete require.cache[middlePath]
       debugInfo('proxy', `处理完成，共处理${Object.keys(res).length}个代理.`);
       return res;
     } else {
       debugInfo('proxy', `http-proxy-middleware版本小于1，开始mock`);
-      const hpm = function mockCreateProxyMiddleware(context, options) {
-        res[context] = options
-      }
+      const hpm = mockCreateProxyMiddleware;
       require.cache[middlePath] = {
         exports: hpm
       };
@@ -96,6 +97,7 @@ async function getProxyByMock(base) {
  * @return {Promise<{}|null>}
  */
 async function getAliasConfByConfig(base, hasTsConfig) {
+  debugInfo('alias', `根据config.json获取别名`);
   const file = path.join(base, hasTsConfig ? '/tsconfig.json' : '/jsconfig.json');
   let json;
   if (hasTsConfig) {
@@ -107,6 +109,7 @@ async function getAliasConfByConfig(base, hasTsConfig) {
     json = require(file);
   }
   if (json && json.compilerOptions && json.compilerOptions.baseUrl) {
+    debugInfo('alias', `项目的baseUrl为:${json.compilerOptions.baseUrl}`);
     const alias = {}
     const src = json.compilerOptions.baseUrl;
     const files = fs.readdirSync(path.join(base, '/' + src));
@@ -118,6 +121,7 @@ async function getAliasConfByConfig(base, hasTsConfig) {
     })
     return alias;
   }
+  debugInfo('alias', `别名获取完成`);
   return null;
 }
 
@@ -127,6 +131,7 @@ async function getAliasConfByConfig(base, hasTsConfig) {
  * @return {{hasTsConfig: boolean, hasJsConfig: boolean}}
  */
 function checkoutTJSConfig(base) {
+  debugInfo('[ts/js]json', `config.json文件判断`);
   const hasTsConfig = fs.existsSync(path.join(base, '/tsconfig.json'));
   const hasJsConfig = fs.existsSync(path.join(base, '/jsconfig.json'));
   return {
@@ -158,6 +163,7 @@ function getConfigPath(base, config) {
  * @return {*}
  */
 function getWebpackConfigJson(base, isReactAppRewired, hasEject, config) {
+  debugInfo('webpack', '开始处理webpack配置文件');
   let configFile;
   if (config) {
     configFile = config;
@@ -168,6 +174,7 @@ function getWebpackConfigJson(base, isReactAppRewired, hasEject, config) {
   } else {
     configFile = webpackPath.craNoEject;
   }
+  debugInfo('webpack', `webpack配置文件为:${configFile}`);
   // 获取webpack的配置文件地址
   const configPath = getConfigPath(base, configFile);
   // 设置环境变量
@@ -180,10 +187,12 @@ function getWebpackConfigJson(base, isReactAppRewired, hasEject, config) {
 
   let configJson;
   if (isReactAppRewired) {
+    debugInfo('webpack', `webpack配置文件解析中`);
     const overrideConfig = require(configPath);
     const webpackConfig = require(getConfigPath(base, webpackPath.craNoEject))
     configJson = overrideConfig(webpackConfig('development'), 'development');
   } else {
+    debugInfo('webpack', `webpack配置文件解析中`);
     const webpackConfig = require(configPath);
     if (typeof webpackConfig === "function") {
       configJson = webpackConfig('development');
@@ -191,6 +200,7 @@ function getWebpackConfigJson(base, isReactAppRewired, hasEject, config) {
       configJson = webpackConfig;
     }
   }
+  debugInfo('webpack', `webpack配置文件解析完成`);
   return configJson;
 }
 

@@ -9,7 +9,6 @@ const { debugError } = require('../util/debug.js');
 async function start({ config, base }) {
   const json = await getPackageJson(base);
   const checkedResult = checkJson(json);
-  console.log(checkedResult)
   try {
     if (checkedResult.isReact) {
       await doReact(base, config, json, {

@@ -209,6 +209,20 @@ async function writePackageJson(base, json) {
   await writeJsonFile(file, json);
 }
 
+async function getVueWebpackConfigJson(base, isVueCli) {
+  const vueConfig = getConfigPath(base, webpackPath.vue);
+  let configJson;
+  if (vueConfig) {
+    const overrideConfig = require(vueConfig);
+    console.log(overrideConfig);
+    process.exit(0)
+  } else {
+    const wpConfig = getConfigPath(base, webpackPath.vueWebpack);
+    configJson = require(wpConfig);
+  }
+  return configJson
+}
+
 module.exports = {
   getPackageJson,
   getAliasByJsonAlias,
@@ -218,4 +232,5 @@ module.exports = {
   getConfigPath,
   getWebpackConfigJson,
   writePackageJson,
+  getVueWebpackConfigJson,
 }

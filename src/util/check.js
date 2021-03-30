@@ -15,18 +15,29 @@ function checkReactIs17(deps) {
   return react17 || script4;
 }
 
+function checkScript(scripts, str) {
+  for (let script of scripts) {
+    if (script && script.indexOf(str) !== -1) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /**
  *
  * @param json
- * @return {{isReactMoreThan17: boolean, isVue: boolean, isReactCreateApp: boolean, isReactAppRewired: boolean, isReact: boolean, reactEject: boolean}}
+ * @return {{isReactMoreThan17: boolean, isVue: boolean, isReactCreateApp: boolean, isReactAppRewired: boolean,
+ *   isReact: boolean, reactEject: boolean}}
  */
 function checkJson(json) {
   let isReact = false;
-  let isVue = false;
   let reactEject = true;
   let isReactCreateApp = false;
   let isReactAppRewired = false;
   let isReactMoreThan17 = false;
+  let isVue = false;
+  let isVueCli = false;
 
   const deps = { ...json.dependencies, ...json.devDependencies };
   if (deps['react']) {
@@ -42,9 +53,12 @@ function checkJson(json) {
     isReactMoreThan17 = checkReactIs17(deps);
   } else if (deps['vue']) {
     isVue = true;
+    if (deps['@vue/cli-service'] || checkScript(json.scripts, 'vue-cli-service')) {
+      isVueCli = true;
+    }
   }
   return {
-    isReact, isVue, reactEject, isReactCreateApp, isReactAppRewired, isReactMoreThan17
+    isReact, reactEject, isReactCreateApp, isReactAppRewired, isReactMoreThan17, isVue, isVueCli
   }
 }
 

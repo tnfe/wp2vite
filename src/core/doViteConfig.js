@@ -42,7 +42,10 @@ function doAlias(content, alias) {
   } else {
     aliasStr = 'let alias = {}'
   }
-  return content.replace(replacePlace.$alias, aliasStr);
+  const index = content.indexOf(replacePlace.$alias);
+  const pre = content.substr(0, index);
+  const post = content.substr(index + replacePlace.$alias.length);
+  return `${pre}${aliasStr}${post}`;
 }
 
 /**
@@ -131,6 +134,7 @@ function doViteConfig(base, { imports, alias, proxy, plugins, esbuild, optimizeD
   let content = viteConfig;
   content = doImport(content, imports);
   content = doAlias(content, alias);
+
   content = doProxy(content, proxy);
   content = doEsBuild(content, esbuild);
 

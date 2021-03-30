@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { getAliasByJsonAlias, getProxyByMock, getAliasConfByConfig, checkoutTJSConfig, getWebpackConfigJson } = require('../util/fileHelp.js')
-const { doCraHtml } = require('../core/doHtml.js');
+const { doReactHtml } = require('../core/doHtml.js');
 const { doViteConfig } = require('../core/doViteConfig.js');
 const { rewriteJson } = require('../core/doPackageJson.js');
 const { debugInfo } = require('../util/debug.js')
@@ -70,7 +70,7 @@ async function doReact(base, config, json, check) {
   }
   // 获取入口并写入到index.html
   const appIndexJs = getEntry(base, configJson.entry);
-  doCraHtml(base, appIndexJs);
+  doReactHtml(base, appIndexJs);
 
   // 入口为js结尾的项目
   const isJsPro = /\.js$/.test(appIndexJs);

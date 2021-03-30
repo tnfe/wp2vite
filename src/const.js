@@ -9,7 +9,8 @@ const webpackPath = {
   craNoEject: './node_modules/react-scripts/config/webpack.config.js',
   craWithEject: './config/webpack.config.js',
   rar: './config-overrides.js',
-  vue: './config/index.js',
+  vue: './vue.config.js',
+  vueWebpack: './node_modules/@vue/cli-service/webpack.config.js',
 }
 
 const replacePlace = {

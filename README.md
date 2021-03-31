@@ -15,7 +15,11 @@
 
 # wp2vite
 
-A front-end project automatic conversion tool, you can click webpack project support vite
+A front-end project automatic conversion tool, you can click webpack project support vite.
+
+wp2vite will not delete your webpack configuration, but will inject vite configuration into your project to support vite.
+
+The development speed is about 80% faster than that of webpack, and the construction speed is about 50% faster than that of webpack.
 
 ## react
 - react projects created by [create-react-app](https://github.com/facebook/create-react-app)  are supported,whether or not eject is performed

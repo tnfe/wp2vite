@@ -1,7 +1,7 @@
 {
   "name": "wp2vite",
   "version": "1.0.4",
-  "description": "webpack support vite",
+  "description": "make webpack project support vite",
   "main": "dist/index.js",
   "bin": {
     "wp2vite": "bin.js"
@@ -34,7 +34,6 @@
   "dependencies": {
     "cac": "^6.7.2",
     "chalk": "^4.1.0",
-    "commander": "^7.2.0",
     "load-json-file": "^6.2.0",
     "write-json-file": "^4.3.0"
   },

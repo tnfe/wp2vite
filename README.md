@@ -15,7 +15,7 @@
 
 # wp2vite
 
-A front-end project automatic conversion tool, you can click webpack project support vite.
+A front-end project automatic conversion tool, You can make your webpack project support vite.
 
 wp2vite will not delete your webpack configuration, but will inject vite configuration into your project to support vite.
 

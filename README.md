@@ -1,5 +1,4 @@
-
-[English](./README.md) | [简体中文](./README.zh-CN.md)
+English | [简体中文](./README.zh-CN.md)
 
 <p align="center">
   <a href="https://www.npmjs.com/package/wp2vite" target="_blank" rel="noopener noreferrer">

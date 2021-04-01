@@ -1,5 +1,4 @@
-
-[English](./README.md) | [简体中文](./README.zh-CN.md)
+[English](./README.md) | 简体中文
 
 <p align="center">
   <a href="https://www.npmjs.com/package/wp2vite" target="_blank" rel="noopener noreferrer">
@@ -22,15 +21,18 @@
 wp2vite 不会删除你的项目的webpack的配置文件，但是会在你的项目中插入vite的配置文件
 
 相较于webpack，vite开发环境构建速度可以提升80%左右，构建生产环境能够提升50%左右
+
 ## support
-### react项目
-- 支持通过[create-react-app](https://github.com/facebook/create-react-app) 创建的项目,无论是否进行了eject
-- 支持通过[react-app-rewired](https://github.com/timarney/react-app-rewired) 创建的项目
-- 支持通过[webpack.config.js](https://github.com/webpack/webpack) 自定义的项目
-### vue项目
-- 支持通过[vue-cli](https://github.com/vuejs/vue-cli)创建的项目,无论项目是否包含vue.config.js
-### 其他项目
-- 支持自定义[webpack.config.js](https://github.com/webpack/webpack) 创建的项目
+### react
+- 支持[create-react-app](https://github.com/facebook/create-react-app)创建的项目, 无论项目是否已执行eject配置
+- 支持[react-app-rewired](https://github.com/timarney/react-app-rewired)配置的项目
+- 支持[webpack.config.js](https://github.com/webpack/webpack)创建的项目
+
+### vue
+- 支持[vue-cli](https://github.com/vuejs/vue-cli)创建的项目, 无论项目是否包含`vue.config.js`文件
+
+### other
+- 其他包含[webpack.config.js](https://github.com/webpack/webpack) 文件的项目均支持转换
 
 ## 安装
 ```

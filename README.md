@@ -1,4 +1,6 @@
 
+[English](./README.md) | [简体中文](./README.zh-CN.md)
+
 <p align="center">
   <a href="https://www.npmjs.com/package/wp2vite" target="_blank" rel="noopener noreferrer">
     <img width="180" src="https://github.com/dravenww/wp2vite/blob/master/logo.png?raw=true" alt="wp2vite logo">
@@ -21,20 +23,20 @@ wp2vite will not delete your webpack configuration, but will inject vite configu
 
 The development speed is about 80% faster than that of webpack, and the construction speed is about 50% faster than that of webpack.
 
-## react
+### react
 - react projects created by [create-react-app](https://github.com/facebook/create-react-app)  are supported,whether or not eject is performed
 - react projects created by [react-app-rewired](https://github.com/timarney/react-app-rewired)  are supported
 - react projects created by [webpack.config.js](https://github.com/webpack/webpack)  are supported
-## vue
+### vue
 - vue projects created by [vue-cli](https://github.com/vuejs/vue-cli) are supported,whether or not contains vue.config.js
-## other
+### other
 - other projects crated by [webpack.config.js](https://github.com/webpack/webpack)  are supported
 
-# install
+## install
 ```
 npm install -g wp2vite
 ```
-# use
+## use
 ```
 cd yourwork/your_project // go to your project catalog
 wp2vite 
@@ -48,6 +50,16 @@ or
 npm run vite-start // start server
 ```
 
-# todo
+##todo
 - support with vue.config.js
 - support with custom webpack.config.js and it isn't react project
+
+## Contribute
+
+If you spotted a bug,please submit a pull request with a bug fix.
+
+If you would like to add a feature or change existing behaviour, open an [issue](https://github.com/tnfe/wp2vite/issues) and tell about what exactly you want to change/add.
+
+## License
+
+[MIT](./LICENSE)

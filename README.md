@@ -16,18 +16,24 @@ English | [简体中文](./README.zh-CN.md)
 
 # wp2vite
 
-A front-end project automatic conversion tool, You can make your webpack project support vite.
+## Overview
+
+A front-end project automatic conversion tool, You can make your [webpack](https://webpack.js.org/) project support [vite](https://vitejs.dev/).
 
 wp2vite will not delete your webpack configuration, but will inject vite configuration into your project to support vite.
 
 The development speed is about 80% faster than that of webpack, and the construction speed is about 50% faster than that of webpack.
 
+## Detailed
+
 ### react
 - react projects created by [create-react-app](https://github.com/facebook/create-react-app)  are supported,whether or not eject is performed
 - react projects created by [react-app-rewired](https://github.com/timarney/react-app-rewired)  are supported
 - react projects created by [webpack.config.js](https://github.com/webpack/webpack)  are supported
+
 ### vue
 - vue projects created by [vue-cli](https://github.com/vuejs/vue-cli) are supported,whether or not contains vue.config.js
+
 ### other
 - other projects crated by [webpack.config.js](https://github.com/webpack/webpack)  are supported
 
@@ -49,7 +55,7 @@ or
 npm run vite-start // start server
 ```
 
-##todo
+## todo
 - support with custom webpack.config.js and it isn't react project
 
 ## Contribute

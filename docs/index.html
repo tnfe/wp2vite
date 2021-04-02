@@ -72,21 +72,6 @@
       position: relative;
     }
 
-    .video {
-      position: relative;
-      padding-bottom: 56.25%;
-      padding-top: 25px;
-      height: 0;
-    }
-
-    .video iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
     .footer {
       text-align: center;
       margin: 50px 0 0;
@@ -119,69 +104,19 @@
       padding: 0.5em;
     }
 
-    .hljs,
-    .hljs-subst {
+    .hljs {
       color: #444
     }
 
-    .hljs-keyword,
-    .hljs-attribute,
-    .hljs-selector-tag,
-    .hljs-meta-keyword,
-    .hljs-doctag,
-    .hljs-name {
-      font-weight: bold
-    }
-
-    .hljs-built_in,
-    .hljs-literal,
-    .hljs-bullet,
-    .hljs-code,
-    .hljs-addition {
-      color: #1F811F
-    }
-
-    .hljs-regexp,
-    .hljs-symbol,
-    .hljs-variable,
-    .hljs-template-variable,
-    .hljs-link,
-    .hljs-selector-attr,
-    .hljs-selector-pseudo {
-      color: #BC6060
-    }
-
-    .hljs-type,
-    .hljs-string,
-    .hljs-number,
-    .hljs-selector-id,
-    .hljs-selector-class,
-    .hljs-quote,
-    .hljs-template-tag,
-    .hljs-deletion {
+    .hljs-string{
       color: #880000
-    }
-
-    .hljs-title,
-    .hljs-section {
-      color: #880000;
-      font-weight: bold
     }
 
     .hljs-comment {
       color: #888888
     }
-
     .hljs-meta {
-      color: #2B6EA1
-    }
-
-    .hljs-emphasis {
-      font-style: italic
-    }
-
-    .hljs-strong {
-      font-weight: bold
+        color: #2B6EA1
     }
   </style>
 </head>
@@ -203,67 +138,70 @@
   <main class="main">
 
     <pre class="oneline">$ npm i -g wp2vite</pre>
-    <pre class="oneline">$ html2react index.html</pre>
+    <pre class="oneline">$ cd your_workspace/your_project</pre>
+    <pre class="oneline">$ wp2vite</pre>
+    <pre class="oneline">$ npm install</pre>
+    <pre class="oneline">$ npm run vite-start</pre>
 
     <div class="code">
 
-      <pre><code class="html hljs xml"><span class="hljs-comment">&lt;!-- index.html --&gt;</span>
-<span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-
-  <span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"header"</span> <span class="hljs-attr">data-component</span>=<span class="hljs-string">"Header"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"heading"</span> <span class="hljs-attr">data-component</span>=<span class="hljs-string">"Heading"</span>&gt;</span>Hello, world!<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
-
-<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre>
+      <pre><code class="html hljs xml">
+<span class="hljs-comment">&lt;!-- old project menu --&gt;</span>
+<span class="hljs-tag">build</span>
+<span class="hljs-tag">config</span>
+<span class="hljs-tag">docs</span>
+<span class="hljs-tag">node_modules</span>
+<span class="hljs-tag">public</span>
+<span class="hljs-tag">src</span>
+    <span class="hljs-tag">components</span>
+    <span class="hljs-tag">pages</span>
+    <span class="hljs-tag">App.tsx</span>
+    <span class="hljs-tag">main.js</span>
+    <span class="hljs-tag">setupProxy.js</span>
+<span class="hljs-tag">.eslintignore</span>
+<span class="hljs-tag">.eslintrc.js</span>
+<span class="hljs-tag">.gitignore</span>
+<span class="hljs-tag">jest.config.js</span>
+<span class="hljs-tag">package.json</span>
+<span class="hljs-tag">package-lock.json</span>
+<span class="hljs-tag">README.md</span>
+<span class="hljs-tag">tsconfig.json</span>
+      </code>
+      </pre>
 
       <div class="arrow"></div>
 
-      <pre><code class="javascript hljs"><span class="hljs-comment">// header.js</span>
-<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
-<span class="hljs-keyword">import</span> Heading <span class="hljs-keyword">from</span> <span class="hljs-string">'./heading'</span>;
-
-<span class="hljs-keyword">const</span> Header = React.createClass({
-  render() {
-    <span class="hljs-keyword">return</span> (
-      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"header"</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">Heading</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Heading</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
-    )</span>;
-  }
-});
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Header;
-
-<span class="hljs-comment">// heading.js</span>
-<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
-
-<span class="hljs-keyword">const</span> Heading = React.createClass({
-  render() {
-    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"heading"</span>&gt;</span>Hello, world!<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>;</span>
-  }
-});
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Heading;</code></pre>
+      <pre><code class="javascript hljs">
+<span class="hljs-comment">&lt;!-- new project menu --&gt;</span>
+<span class="hljs-tag">build</span>
+<span class="hljs-tag">config</span>
+<span class="hljs-tag">docs</span>
+<span class="hljs-tag">node_modules</span>
+<span class="hljs-tag">public</span>
+<span class="hljs-tag">src</span>
+    <span class="hljs-tag">components</span>
+    <span class="hljs-tag">pages</span>
+    <span class="hljs-tag">App.tsx</span>
+    <span class="hljs-tag">main.js</span>
+    <span class="hljs-tag">setupProxy.js</span>
+<span class="hljs-tag">.eslintignore</span>
+<span class="hljs-tag">.eslintrc.js</span>
+<span class="hljs-tag">.gitignore</span>
+<span class="hljs-tag hljs-string">index.html</span>
+<span class="hljs-tag">jest.config.js</span>
+<span class="hljs-tag hljs-meta">package.json</span>
+<span class="hljs-tag hljs-meta">package-lock.json</span>
+<span class="hljs-tag">README.md</span>
+<span class="hljs-tag">tsconfig.json</span>
+<span class="hljs-tag hljs-string">vite.config.js</span>
+      </code></pre>
     </div>
 
-    <div class="video">
-      <iframe src="https://www.youtube.com/embed/Cd8cNLfGcVo" frameborder="0" allowfullscreen></iframe>
-    </div>
+    <p>A front-end project automatic conversion tool, You can make your webpack project support vite.</p>
 
-    <p>This utility was designed to free React developers from a boring work of translating HTML into React components.</p>
-    <p>Imagine you just got a pile of HTML from your designers. The first thing you will do is break HTML into React components.
-      This is boring and we can automate this.</p>
-    <p>HTML components should be annotated with
-      <code>data-component</code> attribute. The value of the attribute is the name of the React component. The structure of HTML is preserved by importing
-      child components and replacing appropriate pieces of HTML with them. As a result you get an entire components tree
-      ready to be rendered.</p>
+    <p>wp2vite will not delete your webpack configuration, but will inject vite configuration into your project to support vite.</p>
+
+    <p>The development speed is about 80% faster than that of webpack, and the construction speed is about 50% faster than that of webpack.</p>
     <p>
       <a href="https://github.com/tnfe/wp2vite#options">Read API and CLI build options reference</a>
     </p>

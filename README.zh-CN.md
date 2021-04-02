@@ -53,7 +53,6 @@ npm run vite-start // start server
 ```
 
 ## todo
-- 支持使用vue.config.js
 - 支持自定义其他项目
 
 ## 贡献

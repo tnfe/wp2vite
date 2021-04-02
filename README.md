@@ -50,7 +50,6 @@ npm run vite-start // start server
 ```
 
 ##todo
-- support with vue.config.js
 - support with custom webpack.config.js and it isn't react project
 
 ## Contribute

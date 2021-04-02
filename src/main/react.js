@@ -1,52 +1,11 @@
 const fs = require('fs');
-const { getAliasByJsonAlias, getProxyByMock, getAliasConfByConfig, checkoutTJSConfig, getWebpackConfigJson } = require('../util/fileHelp.js')
+const { getAliasByJsonAlias, getProxyByMock, getAliasConfByConfig, checkoutTJSConfig, getWebpackConfigJson, getEntries } = require('../util/fileHelp.js')
 const { doReactHtml } = require('../core/doHtml.js');
 const { doViteConfig } = require('../core/doViteConfig.js');
 const { rewriteJson } = require('../core/doPackageJson.js');
 const { debugInfo } = require('../util/debug.js')
-/**
- *
- * @param entry
- * @return {string}
- */
-function getEntry(base, entry) {
-  debugInfo('entry', `根据webpack的配置获取入口`);
-  const cwd = process.cwd();
-  let res = "";
-  if (Array.isArray(entry) || typeof entry === 'object') {
-    for (const key in entry) {
-      const value = entry[key]
-      if (Array.isArray(value)) {
-        for (const val of value) {
-          if (val.indexOf('node_modules') === -1) {
-            res = val.replace(cwd, '');
-            break;
-          }
-        }
-      } else {
-        if (value.indexOf('node_modules') === -1) {
-          res = value.replace(cwd, '');
-          break;
-        }
-      }
-    }
-  } else if (typeof entry === 'string') {
-    res = entry.replace(cwd, '');
-  }
-  const li = res.split('.');
-  res = li.slice(0, li.length - 1).join('.');
-  const exts = ['js', 'ts', 'jsx', 'tsx'];
-  for (const ext of exts) {
-    if (fs.existsSync(base + res + '.' + ext)) {
-      res += '.' + ext;
-      break;
-    }
-  }
-  debugInfo('entry', `入口获取完成，入口为: ${res}`);
-  return res;
-}
 
-async function doReact(base, config, json, check) {
+async function doReact(base, json, check) {
 
   debugInfo('start', 'wp2vite认为是react项目');
   const imports = {};
@@ -66,7 +25,7 @@ async function doReact(base, config, json, check) {
 
   const { reactEject, isReactAppRewired, isReactMoreThan17 } = check;
   const proxy = await getProxyByMock(base);// 获取代理文件
-  const configJson = getWebpackConfigJson(base, isReactAppRewired, reactEject, config);
+  const configJson = getWebpackConfigJson(base, isReactAppRewired, reactEject);
   const { hasTsConfig, hasJsConfig } = checkoutTJSConfig(base);
   if (hasTsConfig || hasJsConfig) {
     const aliasConf = await getAliasConfByConfig(base, hasTsConfig);
@@ -78,11 +37,11 @@ async function doReact(base, config, json, check) {
     }
   }
   // 获取入口并写入到index.html
-  const appIndexJs = getEntry(base, configJson.entry);
-  doReactHtml(base, appIndexJs);
+  const entries = getEntries(base, configJson.entry);
+  doReactHtml(base, entries);
 
   // 入口为js结尾的项目
-  const isJsPro = /\.js$/.test(appIndexJs);
+  const isJsPro = entries.some((item) => /\.js$/.test(item));
   if (isJsPro) {
     debugInfo("plugin", "js项目插入plugin：vite-plugin-react-js-support");
     imports.vitePluginReactJsSupport = 'vite-plugin-react-js-support';

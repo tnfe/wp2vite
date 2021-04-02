@@ -2,20 +2,25 @@ const doReact = require('./react.js');
 const doVue = require('./vue.js');
 const doOther = require('./other.js');
 
-const { getPackageJson } = require('../util/fileHelp.js');
+const { getPackageJson, getConfigPath } = require('../util/fileHelp.js');
 const { checkJson } = require('../util/check.js');
 const { debugError } = require('../util/debug.js');
 
 async function start({ config, base }) {
+  if(getConfigPath(base, 'vite.config.js')) {
+    debugError('error', '已经是vite项目了，将覆盖原有配置进行重新生成配置');
+  }
   const json = await getPackageJson(base);
   const checkedResult = checkJson(json);
   try {
-    if (checkedResult.isReact) {
-      await doReact(base, config, json, {
+    if (!checkedResult.isWebpack) {
+      throw new Error("it isn't a webpack project ");
+    } else if (checkedResult.isReact && checkedResult.isReactAppRewired || checkedResult.isReactCreateApp) {
+      await doReact(base, json, {
         ...checkedResult
       });
-    } else if (checkedResult.isVue) {
-      await doVue(base, config, json, {
+    } else if (checkedResult.isVue && checkedResult.isVueCli) {
+      await doVue(base, json, {
         ...checkedResult
       });
     } else if (config) {

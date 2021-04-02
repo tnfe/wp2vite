@@ -159,15 +159,12 @@ function getConfigPath(base, config) {
  * @param base 根目录
  * @param isReactAppRewired 是否是customer-cra创建的项目
  * @param hasEject 是否进行了eject
- * @param config 配置文件
  * @return {*}
  */
-function getWebpackConfigJson(base, isReactAppRewired, hasEject, config) {
+function getWebpackConfigJson(base, isReactAppRewired, hasEject) {
   debugInfo('webpack', '开始处理webpack配置文件');
   let configFile;
-  if (config) {
-    configFile = config;
-  } else if (isReactAppRewired) {
+  if (isReactAppRewired) {
     configFile = webpackPath.rar;
   } else if (hasEject) {
     configFile = webpackPath.craWithEject;
@@ -209,18 +206,63 @@ async function writePackageJson(base, json) {
   await writeJsonFile(file, json);
 }
 
-async function getVueWebpackConfigJson(base, isVueCli) {
-  const vueConfig = getConfigPath(base, webpackPath.vue);
+function getVueWebpackConfigJson(base) {
   let configJson;
-  if (vueConfig) {
-    const overrideConfig = require(vueConfig);
-    console.log(overrideConfig);
-    process.exit(0)
+  const wpConfig = getConfigPath(base, webpackPath.vueWebpack);
+  const webpackConfig = require(wpConfig);
+  if (typeof webpackConfig === "function") {
+    configJson = webpackConfig('development');
   } else {
-    const wpConfig = getConfigPath(base, webpackPath.vueWebpack);
-    configJson = require(wpConfig);
+    configJson = webpackConfig;
   }
   return configJson
+}
+
+function getVueConfigJson(base) {
+  let configJson;
+  const wpConfig = getConfigPath(base, webpackPath.vue);
+  const webpackConfig = require(wpConfig);
+  if (typeof webpackConfig === "function") {
+    configJson = webpackConfig('development');
+  } else {
+    configJson = webpackConfig;
+  }
+  return configJson
+}
+
+
+
+/**
+ *
+ * @param base
+ * @param entry
+ * @return {(string|undefined)[]}
+ */
+function getEntries(base, entries) {
+  debugInfo('entry', `根据webpack的配置获取入口`);
+  const cwd = process.cwd();
+  let res = [];
+  if (Array.isArray(entries) || typeof entries === 'object') {
+    for (const key in entries) {
+      const entry = entries[key];
+      if (Array.isArray(entry)) {
+        for (const val of entry) {
+          if (val.indexOf('node_modules') === -1) {
+            res.push(val.replace(cwd, ''));
+          }
+        }
+      } else {
+        if (entry.indexOf('node_modules') === -1) {
+          res.push(entry.replace(cwd, ''));
+        }
+      }
+    }
+  } else if (typeof entries === 'string') {
+    res.push(entries.replace(cwd, ''));
+  }
+
+  debugInfo('entry', `入口获取完成，入口为: ${res}`);
+  return res;
 }
 
 module.exports = {
@@ -233,4 +275,6 @@ module.exports = {
   getWebpackConfigJson,
   writePackageJson,
   getVueWebpackConfigJson,
+  getVueConfigJson,
+  getEntries,
 }

@@ -28,7 +28,7 @@ function checkScript(scripts, str) {
  *
  * @param json
  * @return {{isReactMoreThan17: boolean, isVue: boolean, isReactCreateApp: boolean, isReactAppRewired: boolean,
- *   isReact: boolean, reactEject: boolean}}
+ *   isReact: boolean, isVueCli: boolean, reactEject: boolean, isWebpack: boolean}}
  */
 function checkJson(json) {
   let isReact = false;
@@ -38,6 +38,7 @@ function checkJson(json) {
   let isReactMoreThan17 = false;
   let isVue = false;
   let isVueCli = false;
+  let isWebpack = true;
 
   const deps = { ...json.dependencies, ...json.devDependencies };
   if (deps['react']) {
@@ -57,9 +58,14 @@ function checkJson(json) {
       isVueCli = true;
     }
   }
-  return {
-    isReact, reactEject, isReactCreateApp, isReactAppRewired, isReactMoreThan17, isVue, isVueCli
+
+  if(!isReactCreateApp && !isReactAppRewired && !isVueCli && !deps['webpack']) {
+    isWebpack = false;
   }
+
+  return {
+    isReact, reactEject, isReactCreateApp, isReactAppRewired, isReactMoreThan17, isVue, isVueCli, isWebpack
+  };
 }
 
 module.exports = {

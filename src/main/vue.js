@@ -1,81 +1,50 @@
 const { debugInfo } = require('../util/debug.js');
-const { getVueWebpackConfigJson, getAliasByJsonAlias, getProxyByMock, getConfigPath } = require('../util/fileHelp.js');
+const { getVueWebpackConfigJson, getAliasByJsonAlias, getVueConfigJson, getConfigPath, getEntries } = require('../util/fileHelp.js');
 const { rewriteJson } = require('../core/doPackageJson.js');
 const { doViteConfig } = require('../core/doViteConfig.js');
 const { doVueHtml } = require('../core/doHtml.js');
+const { webpackPath } = require('../const.js');
 
-/**
- *
- * @param entry
- * @return {string}
- */
-function getEntry(base, entry) {
-  debugInfo('entry', `根据webpack的配置获取入口`);
-  const cwd = process.cwd();
-  let res = "";
-  if (Array.isArray(entry) || typeof entry === 'object') {
-    for (const key in entry) {
-      const value = entry[key];
-      if (Array.isArray(value)) {
-        for (const val of value) {
-          if (val.indexOf('node_modules') === -1) {
-            res = val.replace(cwd, '');
-            break;
-          }
-        }
-      } else {
-        if (value.indexOf('node_modules') === -1) {
-          res = value.replace(cwd, '');
-          break;
-        }
-      }
-    }
-  } else if (typeof entry === 'string') {
-    res = entry.replace(cwd, '');
+function getProxyFromVueConfig(proxy) {
+  if (!proxy) {
+    return null;
   }
-  console.log(res)
-  const li = res.split('.');
-  res = li.slice(0, li.length - 1).join('.');
-  const exts = ['js', 'ts', 'jsx', 'tsx'];
-  for (const ext of exts) {
-    if (getConfigPath(base , res + '.' + ext)) {
-      res += '.' + ext;
-      break;
-    }
-  }
-  debugInfo('entry', `入口获取完成，入口为: ${res}`);
-  return res;
+  return proxy;
 }
 
-async function doVue(base, config, json, check) {
+async function doVue(base, json, check) {
   debugInfo('start', 'wp2vite认为是Vue项目');
   const imports = {};
   const alias = {};
   const esbuild = {};
   const deps = {};
   const plugins = [];
+  let proxy = false;
   const optimizeDeps = {
     serve: {},
     build: {},
   };
-  const {isVueCli} = check;
   const rollupOptions = {
     serve: {},
     build: {},
   };
 
   imports['* as path'] = 'path';
-  const proxy = await getProxyByMock(base);// 获取代理文件
-  const configJson = await getVueWebpackConfigJson(base, isVueCli);
+  const hasVueConfig = getConfigPath(base, webpackPath.vue);
+  if (hasVueConfig) {
+    const vueConfigJson = getVueConfigJson(base);
+    proxy = getProxyFromVueConfig(vueConfigJson?.devServer?.proxy);
+  }
+  const configJson = getVueWebpackConfigJson(base);
+
   const configAlias = getAliasByJsonAlias(base, configJson?.resolve?.alias);
   for (const key in configAlias) {
     alias[key] = configAlias[key]
   }
 
-  console.log(configJson)
   // 获取入口并写入到index.html
-  const appIndexJs = getEntry(base, configJson.entry);
-  doVueHtml(base, appIndexJs);
+  const entries = getEntries(base, configJson.entry);
+  doVueHtml(base, entries);
 
   debugInfo("plugin", "react项目插入plugin：@vitejs/plugin-vue");
   imports.vuePlugin = '@vitejs/plugin-vue';
@@ -88,6 +57,8 @@ async function doVue(base, config, json, check) {
     targets: ['Android > 39', 'Chrome >= 60', 'Safari >= 10.1', 'iOS >= 10.3', 'Firefox >= 54',  'Edge >= 15'],
   }),`);
   deps['@vitejs/plugin-legacy'] = '^1.3.2';
+  // 插入vue-sfc的依赖
+  deps['@vue/compiler-sfc'] = '^3.0.5';
 
   // 写json
   await rewriteJson(base, json, deps);

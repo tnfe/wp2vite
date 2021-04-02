@@ -9,7 +9,7 @@ const html = `
 </head>
 <body>
 <div id="$root"></div>
-<script type="module" src="$main"></script>
+$script
 </body>
 </html>
 `

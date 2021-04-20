@@ -22,6 +22,9 @@ wp2vite 不会删除你的项目的webpack的配置文件，但是会在你的�
 
 相较于webpack，vite开发环境构建速度可以提升80%左右，构建生产环境能够提升50%左右
 
+## Examples
+- [vite-concent-pro](https://github.com/tnfe/vite-concent-pro)
+
 ## support
 ### react
 - 支持[create-react-app](https://github.com/facebook/create-react-app)创建的项目, 无论项目是否已执行eject配置

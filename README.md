@@ -24,6 +24,9 @@ wp2vite will not delete your webpack configuration, but will inject vite configu
 
 The development speed is about 80% faster than that of webpack, and the construction speed is about 50% faster than that of webpack.
 
+## Examples
+- [vite-concent-pro](https://github.com/tnfe/vite-concent-pro)
+
 ## Detailed
 
 ### react

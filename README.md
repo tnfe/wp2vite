@@ -2,7 +2,7 @@ English | [简体中文](./README.zh-CN.md)
 
 <p align="center">
   <a href="https://www.npmjs.com/package/wp2vite" target="_blank" rel="noopener noreferrer">
-    <img width="180" src="https://github.com/dravenww/wp2vite/blob/master/logo.png?raw=true" alt="wp2vite logo">
+    <img width="180" src="https://github.com/tnfe/wp2vite/blob/master/logo.png?raw=true" alt="wp2vite logo">
   </a>
 </p>
 <br/>

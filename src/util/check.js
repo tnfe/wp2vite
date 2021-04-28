@@ -16,8 +16,8 @@ function checkReactIs17(deps) {
 }
 
 function checkScript(scripts, str) {
-  for (let script of scripts) {
-    if (script && script.indexOf(str) !== -1) {
+  for (let script in scripts) {
+    if (script && scripts[script].indexOf(str) !== -1) {
       return true;
     }
   }

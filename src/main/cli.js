@@ -12,6 +12,7 @@ cli
   .option('-d, --debug [debug]', `[string | boolean] show debug logs`)
   .action(async (root, options) => {
     let base = options.base;
+    base = '/Users/wuhongjie/txwork/elk-platform';
     if (!base) {
       base = process.cwd();
     }

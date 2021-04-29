@@ -2,7 +2,7 @@ const { getVersion, compareVersion } = require('./util.js');
 
 /**
  *
- * @param json
+ * @param deps
  * @return {boolean} 是否大于17
  */
 function checkReactIs17(deps) {
@@ -15,9 +15,22 @@ function checkReactIs17(deps) {
   return react17 || script4;
 }
 
+/**
+ *
+ * @param deps
+ * @return {boolean} 是否大于17
+ */
+function checkVueIs3(deps) {
+  // 判断react版本是否大于等于17
+  const version = getVersion(deps['vue']);
+  const vue3 = compareVersion(version, '3.0.0');
+  return vue3;
+}
+
 function checkScript(scripts, str) {
-  for (let script in scripts) {
-    if (script && scripts[script].indexOf(str) !== -1) {
+  for (let key in scripts) {
+    const value = scripts.hasOwnProperty(key) ? scripts[key] : false;
+    if (value && value.indexOf(str) !== -1) {
       return true;
     }
   }
@@ -37,6 +50,7 @@ function checkJson(json) {
   let isReactAppRewired = false;
   let isReactMoreThan17 = false;
   let isVue = false;
+  let isVue2 = false;
   let isVueCli = false;
   let isWebpack = true;
 
@@ -57,6 +71,7 @@ function checkJson(json) {
     if (deps['@vue/cli-service'] || checkScript(json.scripts, 'vue-cli-service')) {
       isVueCli = true;
     }
+    isVue2 = !checkVueIs3(deps);
   }
 
   if(!isReactCreateApp && !isReactAppRewired && !isVueCli && !deps['webpack']) {
@@ -64,7 +79,7 @@ function checkJson(json) {
   }
 
   return {
-    isReact, reactEject, isReactCreateApp, isReactAppRewired, isReactMoreThan17, isVue, isVueCli, isWebpack
+    isReact, reactEject, isReactCreateApp, isReactAppRewired, isReactMoreThan17, isVue, isVueCli, isWebpack, isVue2
   };
 }
 

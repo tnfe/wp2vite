@@ -46,10 +46,12 @@ async function doVue(base, json, check) {
   const entries = getEntries(base, configJson.entry);
   doVueHtml(base, entries);
 
-  debugInfo("plugin", "react项目插入plugin：@vitejs/plugin-vue");
-  imports.vuePlugin = '@vitejs/plugin-vue';
+  const vuePlugin = check.isVue2 ? 'vite-plugin-vue2' : '@vitejs/plugin-vue';
+
+  debugInfo("plugin", `vue目插入plugin：${vuePlugin}`);
+  imports.vuePlugin = vuePlugin;
   plugins.push(`vuePlugin(),`)
-  deps['@vitejs/plugin-vue'] = '^1.2.0';
+  deps[vuePlugin] = 'latest';
 
   debugInfo("plugin", "为项目插入兼容plugin：@vitejs/plugin-legacy");
   imports.legacyPlugin = '@vitejs/plugin-legacy';
@@ -57,8 +59,10 @@ async function doVue(base, json, check) {
     targets: ['Android > 39', 'Chrome >= 60', 'Safari >= 10.1', 'iOS >= 10.3', 'Firefox >= 54',  'Edge >= 15'],
   }),`);
   deps['@vitejs/plugin-legacy'] = '^1.3.2';
-  // 插入vue-sfc的依赖
-  deps['@vue/compiler-sfc'] = '^3.0.5';
+  if (!check.isVue2) {
+    // 插入vue-sfc的依赖
+    deps['@vue/compiler-sfc'] = '^3.0.5';
+  }
 
   // 写json
   await rewriteJson(base, json, deps);

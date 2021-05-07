@@ -46,11 +46,17 @@ async function doVue(base, json, check) {
   const entries = getEntries(base, configJson.entry);
   doVueHtml(base, entries);
 
-  const vuePlugin = check.isVue2 ? 'vite-plugin-vue2' : '@vitejs/plugin-vue';
-
+  let vuePlugin;
+  if (check.isVue2) {
+    vuePlugin = 'vite-plugin-vue2';
+    imports['{ createVuePlugin }'] = vuePlugin;
+    plugins.push(`createVuePlugin(),`)
+  } else {
+    vuePlugin = '@vitejs/plugin-vue';
+    imports.vuePlugin = vuePlugin;
+    plugins.push(`vuePlugin(),`)
+  }
   debugInfo("plugin", `vue目插入plugin：${vuePlugin}`);
-  imports.vuePlugin = vuePlugin;
-  plugins.push(`vuePlugin(),`)
   deps[vuePlugin] = 'latest';
 
   debugInfo("plugin", "为项目插入兼容plugin：@vitejs/plugin-legacy");

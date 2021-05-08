@@ -3,8 +3,8 @@ const { debugInfo } = require('../util/debug.js');
 
 const prefix = 'vite-'
 const scripts = {
-  dev: 'NODE_ENV=development vite',
-  start: 'NODE_ENV=development vite',
+  dev: 'vite',
+  start: 'vite',
   preview: 'vite preview',
   build: 'vite build',
 }

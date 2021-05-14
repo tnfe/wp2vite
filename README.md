@@ -15,6 +15,7 @@ English | [简体中文](./README.zh-CN.md)
 <br/>
 
 # wp2vite
+It has been officially included，[detail](https://github.com/vitejs/awesome-vite#vue-cli)
 
 ## Overview
 

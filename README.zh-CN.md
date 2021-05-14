@@ -15,6 +15,8 @@
 <br/>
 
 # wp2vite
+wp2vite已被vite官方收录，[详情](https://github.com/vitejs/awesome-vite#vue-cli)
+## Overview
 
 一个前端项目转换工具，可以让webpack项目支持vite
 

@@ -22,7 +22,7 @@ export default ({command, mode}) => {
       alias,
     },
     define: {
-      'process.env.APP_IS_LOCAL': "'true'",
+      'process.env.APP_IS_LOCAL': '"true"',
     },
     server: {
       // 代理

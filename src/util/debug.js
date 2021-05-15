@@ -13,7 +13,7 @@ function debugError(type, msg) {
     msg = type;
     type = 'common';
   }
-  debugSwitch && log(chalk.bgMagentaBright.bold(`[wp2vite-${type}]:`) + chalk.red(msg));
+  debugSwitch && log(chalk.bgBlueBright.bold(`[wp2vite-${type}]:`) + chalk.red(msg));
 }
 
 function debugInfo(type, msg) {
@@ -21,7 +21,7 @@ function debugInfo(type, msg) {
     msg = type;
     type = 'common';
   }
-  debugSwitch && log(chalk.bgMagentaBright.bold(`[wp2vite-${type}]:`) + chalk.green(msg));
+  debugSwitch && log(chalk.bgBlueBright.bold(`[wp2vite-${type}]:`) + chalk.green(msg));
 }
 
 function debugWarning(type, msg) {
@@ -29,7 +29,7 @@ function debugWarning(type, msg) {
     msg = type;
     type = 'common';
   }
-  debugSwitch && log(chalk.bgMagentaBright.bold(`[wp2vite-${type}]:`) + chalk.yellow(msg));
+  debugSwitch && log(chalk.bgBlueBright.bold(`[wp2vite-${type}]:`) + chalk.yellow(msg));
 }
 
 module.exports = {

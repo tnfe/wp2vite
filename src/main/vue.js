@@ -50,7 +50,13 @@ async function doVue(base, json, check) {
   if (check.isVue2) {
     vuePlugin = 'vite-plugin-vue2';
     imports['{ createVuePlugin }'] = vuePlugin;
-    plugins.push(`createVuePlugin(),`)
+    plugins.push(`createVuePlugin(),`);
+    if (json.dependencies && json.dependencies['element-ui']) {
+      imports['esbuildPlugin']  = 'esbuild-plugin-vite-element-ui';
+      deps['esbuild-plugin-vite-element-ui'] = 'latest';
+      optimizeDeps.serve.esbuildOptions = '{ plugins: [esbuildPlugin()] }';
+      debugInfo("plugin", "为项目插入兼容element-ui插件：esbuild-plugin-vite-element-ui");
+    }
   } else {
     vuePlugin = '@vitejs/plugin-vue';
     imports.vuePlugin = vuePlugin;

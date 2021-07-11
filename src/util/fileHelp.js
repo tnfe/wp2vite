@@ -147,7 +147,7 @@ function checkoutTJSConfig(base) {
  */
 function getConfigPath(base, config) {
   const result = path.resolve(base, config);
-  if (fs.existsSync(result)) {
+  if (result && fs.existsSync(result)) {
     return result;
   } else {
     return false;
@@ -161,9 +161,8 @@ function getConfigPath(base, config) {
  * @param hasEject 是否进行了eject
  * @return {*}
  */
-function getWebpackConfigJson(base, isReactAppRewired, hasEject) {
+function getWebpackConfigJson(base, isReactAppRewired, hasEject, configFile = '') {
   debugInfo('webpack', '开始处理webpack配置文件');
-  let configFile;
   if (isReactAppRewired) {
     configFile = webpackPath.rar;
   } else if (hasEject) {
@@ -206,9 +205,9 @@ async function writePackageJson(base, json) {
   await writeJsonFile(file, json);
 }
 
-function getVueWebpackConfigJson(base) {
+function getVueWebpackConfigJson(base, config) {
   let configJson;
-  const wpConfig = getConfigPath(base, webpackPath.vueWebpack);
+  const wpConfig = getConfigPath(base, config || webpackPath.vueWebpack);
   const webpackConfig = require(wpConfig);
   if (typeof webpackConfig === "function") {
     configJson = webpackConfig('development');

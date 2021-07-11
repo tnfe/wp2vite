@@ -15,17 +15,17 @@ async function start({ config, base }) {
   try {
     if (!checkedResult.isWebpack) {
       throw new Error("it isn't a webpack project ");
-    } else if (checkedResult.isReact && checkedResult.isReactAppRewired || checkedResult.isReactCreateApp) {
-      await doReact(base, json, {
-        ...checkedResult
+    } else if (checkedResult.isReact && (checkedResult.isReactAppRewired || checkedResult.isReactCreateApp)) {
+      await doReact(base, json, false, {
+        ...checkedResult,
       });
     } else if (checkedResult.isVue && checkedResult.isVueCli) {
-      await doVue(base, json, {
-        ...checkedResult
+      await doVue(base, json, false, {
+        ...checkedResult,
       });
     } else if (config) {
       await doOther(base, config, json, {
-        ...checkedResult
+        ...checkedResult,
       });
     } else {
       debugError('params', 'unknow config for your project');

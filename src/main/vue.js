@@ -5,6 +5,22 @@ const { doViteConfig } = require('../core/doViteConfig.js');
 const { doVueHtml } = require('../core/doHtml.js');
 const { webpackPath } = require('../const.js');
 
+const imports = {};
+const alias = {};
+const esbuild = {};
+const deps = {};
+const plugins = [];
+let proxy = false;
+const optimizeDeps = {
+  serve: {},
+  build: {},
+};
+const rollupOptions = {
+  serve: {},
+  build: {},
+};
+
+
 function getProxyFromVueConfig(proxy) {
   if (!proxy) {
     return null;
@@ -12,30 +28,15 @@ function getProxyFromVueConfig(proxy) {
   return proxy;
 }
 
-async function doVue(base, json, check) {
+async function doVue(base, json, config, check) {
   debugInfo('start', 'wp2vite认为是Vue项目');
-  const imports = {};
-  const alias = {};
-  const esbuild = {};
-  const deps = {};
-  const plugins = [];
-  let proxy = false;
-  const optimizeDeps = {
-    serve: {},
-    build: {},
-  };
-  const rollupOptions = {
-    serve: {},
-    build: {},
-  };
-
   imports['* as path'] = 'path';
   const hasVueConfig = getConfigPath(base, webpackPath.vue);
   if (hasVueConfig) {
     const vueConfigJson = getVueConfigJson(base);
     proxy = getProxyFromVueConfig(vueConfigJson?.devServer?.proxy);
   }
-  const configJson = getVueWebpackConfigJson(base);
+  const configJson = getVueWebpackConfigJson(base, config);
 
   const configAlias = getAliasByJsonAlias(base, configJson?.resolve?.alias);
   for (const key in configAlias) {

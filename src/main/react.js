@@ -5,7 +5,7 @@ const { doViteConfig } = require('../core/doViteConfig.js');
 const { rewriteJson } = require('../core/doPackageJson.js');
 const { debugInfo } = require('../util/debug.js')
 
-async function doReact(base, json, check) {
+async function doReact(base, json, config, check) {
 
   debugInfo('start', 'wp2vite认为是react项目');
   const imports = {};
@@ -25,7 +25,7 @@ async function doReact(base, json, check) {
 
   const { reactEject, isReactAppRewired, isReactMoreThan17 } = check;
   const proxy = await getProxyByMock(base);// 获取代理文件
-  const configJson = getWebpackConfigJson(base, isReactAppRewired, reactEject);
+  const configJson = getWebpackConfigJson(base, isReactAppRewired, reactEject, config);
   const { hasTsConfig, hasJsConfig } = checkoutTJSConfig(base);
   if (hasTsConfig || hasJsConfig) {
     const aliasConf = await getAliasConfByConfig(base, hasTsConfig);

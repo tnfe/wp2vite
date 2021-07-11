@@ -15,12 +15,15 @@ cli
     if (!base) {
       base = process.cwd();
     }
+    if (!options.config) {
+      options.config = base + '/webpack.config.js';
+    }
     try {
       await start({
         config: options.config,
         base: base,
         debug: options.debug
-      })
+      });
     } catch (e) {
       debugError(`error during build:\n${e.stack}`)
       process.exit(1)

@@ -22,7 +22,12 @@ function doVueHtml(base, entries) {
   doHtml(base, 'app', entries);
 }
 
+function doOtherHtml(base, entries) {
+  doHtml(base, 'root', entries);
+}
+
 module.exports = {
   doReactHtml,
   doVueHtml,
+  doOtherHtml,
 }

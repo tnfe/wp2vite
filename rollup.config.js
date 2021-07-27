@@ -12,7 +12,7 @@ const config = {
     tryCatchDeoptimization: false
   },
   input: {
-    index: path.resolve(__dirname, 'src/main/index.js'),
+    index: path.resolve(__dirname, 'src/main/start.js'),
     cli: path.resolve(__dirname, 'src/main/cli.js')
   },
   external: [

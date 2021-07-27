@@ -1,37 +1,27 @@
-const doReact = require('./react.js');
-const doVue = require('./vue.js');
-const doOther = require('./other.js');
+const { transform } = require("./transform.js");
+const { saveParams, saveEnv } = require('../util/env.js');
+const { saveWebpackConfig } = require('../util/webpack.js');
+const { debugError, debugInfo, switchDebug } = require('../util/debug.js');
 
-const { getPackageJson, getConfigPath } = require('../util/fileHelp.js');
-const { checkJson } = require('../util/check.js');
-const { debugError } = require('../util/debug.js');
+const prepare = async (base, options) => {
+  saveParams(base, options);
+  await saveEnv(base);
+  await saveWebpackConfig();
+}
 
-async function start({ config, base }) {
-  if(getConfigPath(base, 'vite.config.js')) {
-    debugError('error', '已经是vite项目了，将覆盖原有配置进行重新生成配置');
-  }
-  const json = await getPackageJson(base);
-  const checkedResult = checkJson(json);
+const done = async () => {
+  debugInfo('todo', `npm install && npm run vite-start`);
+  debugInfo('todo', `前往 https://github.com/vitejs/awesome-vite 查看你可能需要的插件`);
+}
+
+async function start(base, options) {
   try {
-    if (!checkedResult.isWebpack) {
-      throw new Error("it isn't a webpack project ");
-    } else if (checkedResult.isReact && (checkedResult.isReactAppRewired || checkedResult.isReactCreateApp)) {
-      await doReact(base, json, false, {
-        ...checkedResult,
-      });
-    } else if (checkedResult.isVue && checkedResult.isVueCli) {
-      await doVue(base, json, false, {
-        ...checkedResult,
-      });
-    } else if (config) {
-      await doOther(base, config, json, {
-        ...checkedResult,
-      });
-    } else {
-      debugError('params', 'unknow config for your project');
-    }
-  } catch (err) {
-    debugError('error', err.message || '出错了');
+    switchDebug(options.debug);
+    await prepare(base, options);
+    await transform();
+    await done();
+  } catch (error) {
+    debugError('error', error);
   }
 }
 

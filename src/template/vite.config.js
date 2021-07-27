@@ -1,7 +1,7 @@
 const viteConfig = `
 /* eslint-disable */
 $import
-// https://cn.vitejs.dev/config/
+// @see https://cn.vitejs.dev/config/
 export default ({command, mode}) => {
   let rollupOptions = {};
   $rollupOptionsDefine
@@ -12,6 +12,8 @@ export default ({command, mode}) => {
   $alias
 
   $proxy
+  
+  $define
 
   $esbuild
 
@@ -21,9 +23,7 @@ export default ({command, mode}) => {
     resolve: {
       alias,
     },
-    define: {
-      'process.env.APP_IS_LOCAL': '"true"',
-    },
+    define: define,
     server: {
       // 代理
       proxy,

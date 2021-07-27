@@ -11,6 +11,7 @@ const webpackPath = {
   rar: './config-overrides.js',
   vue: './vue.config.js',
   vueWebpack: './node_modules/@vue/cli-service/webpack.config.js',
+  vueConfig: './vue.config.js',
 }
 
 const replacePlace = {
@@ -18,6 +19,7 @@ const replacePlace = {
   $esbuild: '$esbuild',
   $alias: '$alias',
   $proxy: '$proxy',
+  $define: '$define',
   $plugin: '$plugin',
   $rollupOptionsDefine: '$rollupOptionsDefine',
   $optimizeDepsDefine: '$optimizeDepsDefine',

@@ -32,13 +32,28 @@ const getReactWebpackConfig = async() => {
   const webpackConfigPath = path.resolve(params.base, configFile);
   // 设置环境变量
   process.env.NODE_ENV = 'development';
-  let configJson;
+  let configJson = {};
 
   if (env.isReactAppRewired) {
     const overrideConfig = require(webpackConfigPath);
     const craNoEjectPath = path.resolve(params.base, webpackPath.craNoEject);
     const webpackConfig = require(craNoEjectPath);
-    configJson = overrideConfig(webpackConfig('development'), 'development');
+    if (typeof overrideConfig === "function") {
+      configJson = overrideConfig(webpackConfig('development'), 'development');
+    } else {
+      if (overrideConfig.webpack) {
+        configJson = {
+          ...overrideConfig.webpack
+        }
+      }
+      if (overrideConfig.devServer) {
+        configJson = {
+          ...configJson,
+          ...overrideConfig.devServer
+        }
+      }
+    }
+
   } else {
     configJson = await getConfig(webpackConfigPath);
   }

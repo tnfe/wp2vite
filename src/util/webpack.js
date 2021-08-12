@@ -35,7 +35,10 @@ const getReactWebpackConfig = async() => {
   let configJson;
 
   if (env.isReactAppRewired) {
-    const overrideConfig = require(webpackConfigPath);
+    let overrideConfig = require(webpackConfigPath);
+    if (typeof overrideConfig.webpack === 'function') {
+      overrideConfig = overrideConfig.webpack;
+    }
     const craNoEjectPath = path.resolve(params.base, webpackPath.craNoEject);
     const webpackConfig = require(craNoEjectPath);
     configJson = overrideConfig(webpackConfig('development'), 'development');

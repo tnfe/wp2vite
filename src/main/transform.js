@@ -126,7 +126,7 @@ const doCommon = async () => {
   }),`);
 
   if(deps['babel-plugin-import']) {
-    addImport('{ usePluginImport }', 'vite-plugin-importer');
+    addImport('usePluginImport', 'vite-plugin-importer');
     addDevDeps('vite-plugin-importer', '^0.2.5');
     viteConfig.plugins.push(`usePluginImport({
       libraryName: " ", // todo please input your babel-plugin-import config

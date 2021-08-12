@@ -35,6 +35,7 @@ function doHtml(root, entries) {
     if (match && match[0]) {
       head = match[0];
       head = head.replace(/%PUBLIC_URL%/ig, '');
+      head = head.replace(/<%=(.*)%>/ig, '');
     }
   }
   let content = html.replace('$head', head);

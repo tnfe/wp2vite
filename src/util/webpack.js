@@ -162,8 +162,7 @@ const getWebpackConfig = () => {
 }
 const getVueConfig = () => {
   if (!vueConfig) {
-    debugError('webpack', 'vue配置获取失败');
-    process.exit(0);
+    return false;
   }
   return vueConfig;
 }

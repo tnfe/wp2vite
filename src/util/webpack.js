@@ -36,24 +36,30 @@ const getReactWebpackConfig = async() => {
 
   if (env.isReactAppRewired) {
     const overrideConfig = require(webpackConfigPath);
+    // let overrideConfig = require(webpackConfigPath);
     const craNoEjectPath = path.resolve(params.base, webpackPath.craNoEject);
     const webpackConfig = require(craNoEjectPath);
     if (typeof overrideConfig === "function") {
       configJson = overrideConfig(webpackConfig('development'), 'development');
     } else {
-      if (overrideConfig.webpack) {
+      if (overrideConfig.webpack && typeof overrideConfig.webpack === 'function') {
+        const webpack = overrideConfig.webpack(webpackConfig('development'), 'development');
         configJson = {
-          ...overrideConfig.webpack
+          ...webpack
         }
       }
-      if (overrideConfig.devServer) {
+      if (overrideConfig.devServer && typeof overrideConfig.devServer === 'function') {
+        const mockFunc = function() {
+          return function () {}
+        }
+        const mockFun = function() {}
+        const devServer = overrideConfig.devServer(mockFunc)(mockFun);
         configJson = {
           ...configJson,
-          ...overrideConfig.devServer
+          devServer
         }
       }
     }
-
   } else {
     configJson = await getConfig(webpackConfigPath);
   }

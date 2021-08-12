@@ -52,7 +52,11 @@ const doReact = async () => {
   }
   const entries = getEntries(webpackConfigJson);
   doReactHtml(entries);
-  viteConfig.proxy = await getReactProxyByMock();
+  if (env.isReactAppRewired && webpackConfigJson.devServer && webpackConfigJson.devServer.proxy) {
+    viteConfig.proxy = webpackConfigJson.devServer.proxy;
+  } else {
+    viteConfig.proxy = await getReactProxyByMock();
+  }
 
   const isJsPro = entries.some((item) => /\.js$/.test(item));
   if (isJsPro) {

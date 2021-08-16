@@ -44,21 +44,22 @@ wp2vite 不会删除你的项目的webpack的配置文件，但是会在你的�
 npm install -g wp2vite
 ```
 ## 使用
+使用之前请确保你的项目已经安装了依赖，即node_modules文件夹内有项目依赖
 ```
-cd yourwork/your_project // go to your project catalog
+cd yourwork/your_project // 进入到项目目录
 wp2vite 
 or 
-wp2vite init
+wp2vite --config=./webpack.config.js // 传递配置文件
 
-npm install // install dependencies
+wp2vite -v // 查看版本
+
+
+npm install // 安装转换后的依赖
 
 npm run dev // start server
 or
 npm run vite-start // start server
 ```
-
-## todo
-- 支持自定义其他项目
 
 ## 贡献
 如果你想解决一个缺陷，欢迎提pr

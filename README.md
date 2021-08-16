@@ -49,8 +49,10 @@ npm install -g wp2vite
 ```
 cd yourwork/your_project // go to your project catalog
 wp2vite 
-or 
-wp2vite init
+or
+wp2vite --config=./webpack.config.js // with config file
+
+wp2vite -v // check wp2vite version
 
 npm install // install dependencies
 
@@ -58,9 +60,6 @@ npm run dev // start server
 or
 npm run vite-start // start server
 ```
-
-## todo
-- support with custom webpack.config.js and it isn't react project
 
 ## Contribute
 

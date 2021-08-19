@@ -48,12 +48,12 @@ function checkReactIs17(deps) {
 /**
  *
  * @param deps
- * @return {boolean} 是否大于17
+ * @return {boolean} 判断vue版本
  */
 function checkVueVersion(deps, ver) {
-  // 判断react版本是否大于等于17
   const version = getVersion(deps['vue']);
-  return compareVersion(version, ver);
+  const bigV = parseInt(version.split('.')[0], 10);
+  return bigV === ver;
 }
 
 function checkScript(scripts, str) {
@@ -100,8 +100,8 @@ const prepareEnv = (deps, json) => {
     } else {
       env.isNeedConfig = true;
     }
-    env.isVue2 = checkVueVersion(deps, '2.0.0');
-    env.isVue3 = checkVueVersion(deps, '3.0.0');
+    env.isVue2 = checkVueVersion(deps, 2);
+    env.isVue3 = checkVueVersion(deps, 3);
   } else {
     debugError('目前仅支持 React/Vue 项目');
     process.exit(0);

@@ -58,7 +58,7 @@ npm install // 安装转换后的依赖
 
 npm run dev // start server
 or
-npm run vite-start // start server
+npm run vite-dev // start server
 ```
 
 ## 贡献

@@ -58,7 +58,7 @@ npm install // install dependencies
 
 npm run dev // start server
 or
-npm run vite-start // start server
+npm run vite-dev // start server
 ```
 
 ## Contribute

@@ -97,7 +97,7 @@ const doVue = async () => {
   if (env.isVue2) {
     addDevDeps('vite-plugin-vue2', 'latest');
     addImport('{ createVuePlugin }', 'vite-plugin-vue2');
-    viteConfig.plugins.push('createVuePlugin(),');
+    viteConfig.plugins.unshift('createVuePlugin(),');
   } else if (env.isVue3) {
     addDevDeps('@vitejs/plugin-vue', 'latest');
     addImport('vuePlugin', '@vitejs/plugin-vue');

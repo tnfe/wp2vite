@@ -1,6 +1,6 @@
 {
   "name": "wp2vite",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "make webpack project support vite",
   "main": "dist/index.js",
   "bin": {

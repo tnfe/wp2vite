@@ -1,22 +1,24 @@
-const viteConfig = `
 /* eslint-disable */
-$import
+
 // @see https://cn.vitejs.dev/config/
-export default ({command, mode}) => {
+export default ({
+  command,
+  mode
+}) => {
   let rollupOptions = {};
-  $rollupOptionsDefine
+
 
   let optimizeDeps = {};
-  $optimizeDepsDefine
 
-  $alias
 
-  $proxy
-  
+  let alias = {}
+
+  let proxy = {}
+
   // todo 替换为原有变量
-  $define
+  let define = {}
 
-  $esbuild
+  let esbuild = {}
 
   return {
     base: './', // index.html文件所在位置
@@ -40,7 +42,7 @@ export default ({command, mode}) => {
     esbuild,
     optimizeDeps,
     plugins: [
-      $plugin
+
     ],
     css: {
       preprocessorOptions: {
@@ -51,8 +53,4 @@ export default ({command, mode}) => {
       },
     },
   };
-};`;
-
-module.exports = {
-  viteConfig,
 };

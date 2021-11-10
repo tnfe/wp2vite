@@ -1,0 +1,39 @@
+{
+	"name": "wep2vite-mock",
+	"version": "0.1.0",
+	"private": true,
+	"devDependencies": {
+		"vite": "^2.1.0"
+	},
+	"dependencies": {
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2"
+	},
+	"scripts": {
+		"start": "echo 'start'",
+		"dev": "vite",
+		"vite-start": "vite",
+		"preview": "vite preview",
+		"build": "vite build",
+		"vite-dev": "vite",
+		"vite-preview": "vite preview",
+		"vite-build": "vite build"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"babel": {
+		"presets": [
+			"react-app"
+		]
+	}
+}

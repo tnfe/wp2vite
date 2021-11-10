@@ -12,7 +12,7 @@ const defaultHead = `
     <title>Vite App</title>
 `;
 
-function doHtml(root, entries) {
+const doHtml = (root, entries) => {
   const { base } = getParams();
   debugInfo('html', `将入口写入到html文件`);
   let head = defaultHead;
@@ -42,28 +42,28 @@ function doHtml(root, entries) {
 
   let scripts = '';
   entries.forEach((item) => {
-    scripts += `<script type="module" src="${item}"></script>`
-  })
+    scripts += `<script type="module" src="${item}"></script>`;
+  });
   content = content.replace('$root', root).replace('$script', scripts);
-  const file = base + '/index.html';
+  const file = `${base}/index.html`;
   fs.writeFileSync(file, content);
   debugInfo('html', `html处理完成`);
-}
+};
 
-function doReactHtml(entries) {
+const doReactHtml = (entries) => {
   doHtml('root', entries);
-}
+};
 
-function doVueHtml(entries) {
+const doVueHtml = (entries) => {
   doHtml('app', entries);
-}
+};
 
-function doOtherHtml(entries) {
+const doOtherHtml = (entries) => {
   doHtml('root', entries);
-}
+};
 
 module.exports = {
   doReactHtml,
   doVueHtml,
   doOtherHtml,
-}
+};

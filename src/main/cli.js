@@ -19,12 +19,12 @@ cli
     if (!options.force) {
       options.force = false;
     }
-    options.debug = true //!!options.debug;
+    options.debug = true; // !!options.debug;
     try {
       await start(base, options);
     } catch (e) {
-      debugError(`error during build:\n${e.stack}`)
-      process.exit(1)
+      debugError(`error during build:\n${e.stack}`);
+      process.exit(1);
     }
   });
 cli.help();

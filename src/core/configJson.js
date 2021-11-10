@@ -1,15 +1,18 @@
-const fs = require('fs');
 const path = require('path');
 const resolve = require('resolve');
 const writeJsonFile = require('write-json-file');
 const { getParams } = require('../util/env.js');
 const { checkoutTJSConfig } = require('../util/file.js');
 
+/**
+ * 处理tsconfig/jsconfig 的target
+ * @return {Promise<void>}
+ */
 const doConfigJson = async () => {
   const { base } = getParams();
   const { hasTsConfig, hasJsConfig } = checkoutTJSConfig(base);
-  if (hasTsConfig || hasJsConfig) {
 
+  if (hasTsConfig || hasJsConfig) {
     const file = path.join(base, hasTsConfig ? '/tsconfig.json' : '/jsconfig.json');
     let json;
     if (hasTsConfig) {
@@ -30,10 +33,10 @@ const doConfigJson = async () => {
       await writeJsonFile(file, json);
     }
   }
-}
+};
 
 module.exports = {
-  doConfigJson
-}
+  doConfigJson,
+};
 
 

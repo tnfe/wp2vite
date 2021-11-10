@@ -7,12 +7,12 @@
  * 2.0.3 < 2.0.4: false;
  * 2.0.3 === 2.0.3 true;
  */
-function compareVersion(current, version) {
+const compareVersion = (current, version) => {
   const curs = current.split('.');
   const vers = version.split('.');
-  for(let i= 0; i< 3; i++) {
-    if(curs[i] > curs[i]) {
-      return true
+  for(let i = 0; i < 3; i++) {
+    if(curs[i] > vers[i]) {
+      return true;
     } else if (curs[i] < vers[i]) {
       return false;
     } else {
@@ -20,24 +20,24 @@ function compareVersion(current, version) {
     }
   }
   return true;
-}
+};
 
 /**
  *
  * @param num
  * @return boolean
  */
-function isNumber(num) {
+const isNumber = (num) => {
   num = +num;
-  return typeof num === 'number' && !isNaN(num)
-}
+  return typeof num === 'number' && !isNaN(num);
+};
 
 /**
  * 获取版本信息
  * @param dep 2.0.3 || ^2.0.3
  * @return string
  */
-function getVersion(dep) {
+const getVersion = (dep) => {
   if(!dep) {
     return '0.0.0';
   }
@@ -45,10 +45,10 @@ function getVersion(dep) {
     dep = dep.slice(1);
   }
   return dep;
-}
+};
 
 
 module.exports = {
   compareVersion,
   getVersion,
-}
+};

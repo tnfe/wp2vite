@@ -33,17 +33,26 @@ const viteConfig = {
 
 const devDeps = {};
 
-
+/**
+ * 增加import
+ * @param key
+ * @param value
+ */
 const addImport = (key, value) => {
   viteConfig.imports[key] = value;
-}
-
-const addDevDeps = (key, value) => {
-  devDeps[key] = value;
-}
+};
 
 /**
- * do react
+ * 增加依赖
+ * @param key
+ * @param value
+ */
+const addDevDeps = (key, value) => {
+  devDeps[key] = value;
+};
+
+/**
+ * do react项目
  * @return {Promise}
  */
 const doReact = async () => {
@@ -65,12 +74,9 @@ const doReact = async () => {
     viteConfig.plugins.push(`vitePluginReactJsSupport([], { jsxInject: ${env.isReactMoreThan17 ? true : false}, }),`);
     viteConfig.optimizeDeps.serve.entries = false;
     viteConfig.rollupOptions.serve.input = '[]';
-  // } else {
-  //   if (env.isReactMoreThan17) {
-  //     viteConfig.esBuild.jsxInject = `import React from 'react'`
-  //   }
   }
 
+  // 增加vite-plugin-svgr的支持
   if (deps['raw-loader'] || deps['svg-inline-loader']) {
     addImport('svgr', 'vite-plugin-svgr');
     addDevDeps('vite-plugin-svgr', '^0.3.0');
@@ -82,15 +88,18 @@ const doReact = async () => {
   addImport('reactRefresh', '@vitejs/plugin-react-refresh');
   addDevDeps('@vitejs/plugin-react-refresh', '^1.3.5');
   viteConfig.plugins.push(`reactRefresh(),`);
-}
+};
 
-const doVue = async () => {
+/**
+ * do vue项目
+ */
+const doVue = () => {
   if (!env.isVue) {
     return;
   }
   const entries = getEntries(webpackConfigJson);
   doVueHtml(entries);
-  vueConfigJson = await getVueConfig();
+  vueConfigJson = getVueConfig();
   viteConfig.proxy = vueConfigJson?.devServer?.proxy;
 
   if (env.isVue2) {
@@ -111,13 +120,12 @@ const doVue = async () => {
   }
 
   viteConfig.define.push(`'process.env.NODE_ENV': command === 'serve' ? '"development"' : '"production"'`);
-}
+};
 
 /**
  * do common
- * @return {Promise}
  */
-const doCommon = async () => {
+const doCommon = () => {
   addDevDeps('vite', '2');
   // 插入legacy
   addImport('legacyPlugin', '@vitejs/plugin-legacy');
@@ -156,22 +164,26 @@ const doCommon = async () => {
     doOtherHtml(entries);
   }
   // tsconfig.js or jsconfig.json
-  const aliasConf = await getConfigAlias(webpackConfigJson);
+  const aliasConf = getConfigAlias(webpackConfigJson);
   if (aliasConf) {
     addImport('* as path', 'path');
     for (const key in aliasConf) {
       viteConfig.alias[key] = aliasConf[key];
     }
   }
-}
+};
 
+/**
+ * 获取项目类型
+ * @return {string}
+ */
 const getProType = () => {
   if (env.isReact) {
     return env.isReactMoreThan17 ? 'React 17' : 'React 16';
   } else {
     return env.isVue2 ? 'Vue2' : 'Vue3';
   }
-}
+};
 
 /**
  * transform main
@@ -184,19 +196,19 @@ const transform = async () => {
     deps = {
       ...env.packageJson['dependencies'],
       ...env.packageJson['devDependencies'],
-    }
+    };
     debugInfo('start', `wp2vite 认为是*${getProType()}*项目`);
-    webpackConfigJson = await getWebpackConfig();
-    await doCommon();
+    webpackConfigJson = getWebpackConfig();
+    doCommon();
 
     // 分析
     await doReact();
-    await doVue();
+    doVue();
 
-    const defines = await getDefinePluginConfig();
+    const defines = getDefinePluginConfig();
     viteConfig.define.push(...defines);
     // 写入
-    await doViteConfig(viteConfig);;
+    doViteConfig(viteConfig);
     await doPackageJson(devDeps);
     await doConfigJson();
 
@@ -205,8 +217,8 @@ const transform = async () => {
     debugError('start', 'trans 失败');
     debugError('start', error);
   }
-}
+};
 
 module.exports = {
-  transform
-}
+  transform,
+};

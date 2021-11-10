@@ -2,14 +2,19 @@ const fs = require('fs');
 const path = require('path');
 const { getEnv, getParams } = require('./env.js');
 const { webpackPath } = require('../const.js');
-const { debugError, debugInfo } = require('./debug.js');
+const { debugError } = require('./debug.js');
 
 let webpackConfig = false;
 let vueConfig = false;
 let env;
 let params;
 
-const getConfig = async (config) => {
+/**
+ * 获取配置信息的基础能力
+ * @param config
+ * @return configJson
+ */
+const getConfig = (config) => {
   process.env.NODE_ENV = 'development';
   const webpackConfig = require(config);
   let configJson;
@@ -19,9 +24,13 @@ const getConfig = async (config) => {
     configJson = webpackConfig;
   }
   return configJson;
-}
+};
 
-const getReactWebpackConfig = async() => {
+/**
+ * for react项目
+ * @return configJson
+ */
+const getReactWebpackConfig = () => {
   let configFile;
   if (env.isReactAppRewired) {
     configFile = webpackPath.rar;
@@ -47,50 +56,50 @@ const getReactWebpackConfig = async() => {
         const webpack = overrideConfig.webpack(webpackConfig('development'), 'development');
         configJson = {
           ...webpack
-        }
+        };
       }
       if (overrideConfig.devServer && typeof overrideConfig.devServer === 'function') {
         const mockFunc = function() {
-          return function () {}
-        }
-        const mockFun = function() {}
+          return function () {};
+        };
+        const mockFun = function() {};
         const devServer = overrideConfig.devServer(mockFunc)(mockFun);
         configJson = {
           ...configJson,
           devServer
-        }
+        };
       }
     }
   } else {
-    configJson = await getConfig(webpackConfigPath);
+    configJson = getConfig(webpackConfigPath);
   }
   return configJson;
-}
+};
 
-const getVueWebpackConfig = async() => {
+/**
+ * for vue项目
+ * @return {Promise<*>}
+ */
+const getVueWebpackConfig = () => {
   process.env.NODE_ENV = 'development';
   const vueConfigPath = path.resolve(params.base, webpackPath.vueConfig);
   if (fs.existsSync(vueConfigPath)) {
-    // const servicePath = path.resolve(params.base, './node_modules/@vue/cli-service/lib/Service.js');
-    // console.log(servicePath);
-    // const Service = require(servicePath);
-    // const service = new Service(params.base);
-    // service.init('dev');
-    // console.log(service);
-    vueConfig = await getConfig(vueConfigPath);
-    // todo chainWebpack, configWebpack
-    // console.log(vueConfig);
+    vueConfig = getConfig(vueConfigPath);
   }
   const vueWebpackPath = path.resolve(params.base, webpackPath.vueWebpack);
-  return await getConfig(vueWebpackPath);
-}
+  const result = getConfig(vueWebpackPath);
+  return result;
+};
 
-const saveWebpackConfig = async() => {
-  env = await getEnv();
+/**
+ * 保存当前项目的webpack的配置信息
+ */
+const saveWebpackConfig = () => {
+  env = getEnv();
   params = getParams();
   if (env.hasConfig) {
     // 传递了config，用其传递的config
-    webpackConfig = await getConfig(params.config);
+    webpackConfig = getConfig(params.config);
   } else if (env.isNeedConfig) {
     // 未传config，并且需要config的话，报错
     debugError('webpack', '未传递webpack配置文件路径');
@@ -98,23 +107,26 @@ const saveWebpackConfig = async() => {
   } else {
     // 走正常判断逻辑
     if (env.isReact) {
-      webpackConfig = await getReactWebpackConfig();
+      webpackConfig = getReactWebpackConfig();
     } else if (env.isVue) {
-      webpackConfig = await getVueWebpackConfig();
+      webpackConfig = getVueWebpackConfig();
     } else {
       // 走兜底逻辑，获取当前路径下面的config.
       const config = path.resolve(params.base, './webpack.config.js');
       if (fs.existsSync(config)) {
-        webpackConfig = await getConfig(config);
+        webpackConfig = getConfig(config);
       } else {
         debugError('webpack', '跟目录下未找到webpack.config.js');
         process.exit(0);
       }
     }
   }
-}
+};
 
-// 获取HtmlWebpackPlugin的配置信息
+/**
+ * 获取HtmlWebpackPlugin的配置信息
+ * @return {boolean|*}
+ */
 const getWebpackHtmlPluginConfig = () => {
   if (webpackConfig && Array.isArray(webpackConfig.plugins)) {
     const plugins = webpackConfig.plugins;
@@ -126,10 +138,13 @@ const getWebpackHtmlPluginConfig = () => {
     }
   }
   return false;
-}
+};
 
-// 获取DefinePlugin的配置信息
-const getDefinePluginConfig = async() => {
+/**
+ * 获取DefinePlugin的配置信息
+ * @return []
+ */
+const getDefinePluginConfig = () => {
   const defines = [];
   try {
     if (webpackConfig && Array.isArray(webpackConfig.plugins)) {
@@ -153,27 +168,31 @@ const getDefinePluginConfig = async() => {
         }
       }
     }
+    return defines;
   } catch (err) {
     debugError('webpack', '获取 DefinePlugin 失败');
     debugError('webpack', err);
-  } finally {
-    return defines;
   }
-}
+};
 
+/**
+ * 对外暴露获取webpack配置信息的入口
+ * @return {boolean}
+ */
 const getWebpackConfig = () => {
   if (!webpackConfig) {
     debugError('webpack', 'webpack配置获取失败');
     process.exit(0);
   }
   return webpackConfig;
-}
+};
+
 const getVueConfig = () => {
   if (!vueConfig) {
     return false;
   }
   return vueConfig;
-}
+};
 
 module.exports = {
   saveWebpackConfig,
@@ -181,4 +200,4 @@ module.exports = {
   getWebpackHtmlPluginConfig,
   getDefinePluginConfig,
   getVueConfig,
-}
+};

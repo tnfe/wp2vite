@@ -7,9 +7,9 @@ $head
 $script
 </body>
 </html>
-`
+`;
 
 
 module.exports = {
-  html
-}
+  html,
+};

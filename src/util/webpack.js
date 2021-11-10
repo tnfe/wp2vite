@@ -9,7 +9,8 @@ let vueConfig = false;
 let env;
 let params;
 
-const getConfig = async(config) => {
+const getConfig = async (config) => {
+  process.env.NODE_ENV = 'development';
   const webpackConfig = require(config);
   let configJson;
   if (typeof webpackConfig === "function") {
@@ -67,6 +68,7 @@ const getReactWebpackConfig = async() => {
 }
 
 const getVueWebpackConfig = async() => {
+  process.env.NODE_ENV = 'development';
   const vueConfigPath = path.resolve(params.base, webpackPath.vueConfig);
   if (fs.existsSync(vueConfigPath)) {
     // const servicePath = path.resolve(params.base, './node_modules/@vue/cli-service/lib/Service.js');
@@ -128,7 +130,7 @@ const getWebpackHtmlPluginConfig = () => {
 
 // 获取DefinePlugin的配置信息
 const getDefinePluginConfig = async() => {
-  const defines = {};
+  const defines = [];
   try {
     if (webpackConfig && Array.isArray(webpackConfig.plugins)) {
       const plugins = webpackConfig.plugins;
@@ -139,12 +141,12 @@ const getDefinePluginConfig = async() => {
           for (const definition in definitions) {
             const definitionValue = definitions[definition];
             for (const key in definitionValue) {
-              if (key === 'BASE_URL') {
+              if (key === 'BASE_URL' || key === 'APP_IS_LOCAL' || key === 'REACT_APP_IS_LOCAL') {
                 continue;
               }
               const value = definitionValue[key];
               if (value) {
-                defines[`${definition}.${key}`] = value;
+                defines.push(`'${definition}.${key}': '${value}'`);
               }
             }
           }

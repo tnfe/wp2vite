@@ -97,9 +97,9 @@ function doDefine(content, define) {
   let str = '';
   if (define) {
     str += 'let define = {';
-    for (const key in define) {
-      str += `'${key}': '${define[key]}',`;
-    }
+    define.forEach((item) => {
+      str += `${item},`;
+    })
     str += '}';
   } else {
     str += 'let define = {};';

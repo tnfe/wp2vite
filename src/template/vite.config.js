@@ -13,6 +13,7 @@ export default ({command, mode}) => {
 
   $proxy
   
+  // todo 替换为原有变量
   $define
 
   $esbuild

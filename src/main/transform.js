@@ -18,7 +18,7 @@ const viteConfig = {
   imports: {},
   alias: {},
   esBuild: {},
-  define: {},
+  define: [],
   plugins: [],
   proxy: false,
   optimizeDeps: {
@@ -65,10 +65,10 @@ const doReact = async () => {
     viteConfig.plugins.push(`vitePluginReactJsSupport([], { jsxInject: ${env.isReactMoreThan17 ? true : false}, }),`);
     viteConfig.optimizeDeps.serve.entries = false;
     viteConfig.rollupOptions.serve.input = '[]';
-  } else {
-    if (env.isReactMoreThan17) {
-      viteConfig.esBuild.jsxInject = `import React from 'react'`
-    }
+  // } else {
+  //   if (env.isReactMoreThan17) {
+  //     viteConfig.esBuild.jsxInject = `import React from 'react'`
+  //   }
   }
 
   if (deps['raw-loader'] || deps['svg-inline-loader']) {
@@ -77,9 +77,8 @@ const doReact = async () => {
     viteConfig.plugins.push(`svgr(),`);
   }
 
-  viteConfig.define = {
-    'process.env.APP_IS_LOCAL': '"true"',
-  }
+  viteConfig.define.push(`'process.env.APP_IS_LOCAL': command === 'serve' ? '"true"' : '"false"'`);
+  viteConfig.define.push(`'process.env.REACT_APP_IS_LOCAL': command === 'serve' ? '"true"' : '"false"'`);
   addImport('reactRefresh', '@vitejs/plugin-react-refresh');
   addDevDeps('@vitejs/plugin-react-refresh', '^1.3.5');
   viteConfig.plugins.push(`reactRefresh(),`);
@@ -111,9 +110,7 @@ const doVue = async () => {
     viteConfig.plugins.push(`svgLoader(),`);
   }
 
-  viteConfig.define = {
-    'process.env.NODE_ENV': '"development"',
-  }
+  viteConfig.define.push(`'process.env.NODE_ENV': command === 'serve' ? '"development"' : '"production"'`);
 }
 
 /**
@@ -166,10 +163,6 @@ const doCommon = async () => {
       viteConfig.alias[key] = aliasConf[key];
     }
   }
-  viteConfig.define = {
-    ...viteConfig.define,
-    ...await getDefinePluginConfig()
-  }
 }
 
 const getProType = () => {
@@ -200,6 +193,8 @@ const transform = async () => {
     await doReact();
     await doVue();
 
+    const defines = await getDefinePluginConfig();
+    viteConfig.define.push(...defines);
     // 写入
     await doViteConfig(viteConfig);;
     await doPackageJson(devDeps);

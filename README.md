@@ -31,15 +31,15 @@ The development speed is about 80% faster than that of webpack, and the construc
 ## Detailed
 
 ### react
-- react projects created by [create-react-app](https://github.com/facebook/create-react-app)  are supported,whether or not eject is performed
-- react projects created by [react-app-rewired](https://github.com/timarney/react-app-rewired)  are supported
-- react projects created by [webpack.config.js](https://github.com/webpack/webpack)  are supported
+- react projects created by [create-react-app](https://github.com/facebook/create-react-app) are supported, whether or not eject is performed.
+- react projects created by [react-app-rewired](https://github.com/timarney/react-app-rewired) are supported.
+- react projects created by [webpack.config.js](https://github.com/webpack/webpack) are supported.
 
 ### vue
-- vue projects created by [vue-cli](https://github.com/vuejs/vue-cli) are supported,whether or not contains vue.config.js
+- vue projects created by [vue-cli](https://github.com/vuejs/vue-cli) are supported, whether or not contains `vue.config.js` file.
 
 ### other
-- other projects crated by [webpack.config.js](https://github.com/webpack/webpack)  are supported
+- other projects crated by [webpack.config.js](https://github.com/webpack/webpack) are supported.
 
 ## install
 ```
@@ -63,7 +63,7 @@ npm run vite-start // start server
 
 ## Contribute
 
-If you spotted a bug,please submit a pull request with a bug fix.
+If you spotted a bug, please submit a pull request with a bug fix.
 
 If you would like to add a feature or change existing behaviour, open an [issue](https://github.com/tnfe/wp2vite/issues) and tell about what exactly you want to change/add.
 
